@@ -1,5 +1,6 @@
 from enum import Enum
-from jogo import Jogador, Jogo
+from jogo import Jogo
+from jogador import Jogador
 
 class Quadrado(Jogador, Enum):
     X = "X"
@@ -19,15 +20,15 @@ class Quadrado(Jogador, Enum):
 
 class JogoVelha(Jogo):
     def __init__(self, posicao = [Quadrado.V] * 9, turno = Quadrado.X):
-        self.posicao = posicao
+        self.posicao = posicao #estado tabuleiro
         self._turno = turno
 
     def turno(self):
         return self._turno
     
-    def jogar(self, local):
+    def jogar(self, casa_jogada):
         temp = self.posicao.copy()
-        temp[local] = self._turno
+        temp[casa_jogada] = self._turno
         return JogoVelha(temp, self.turno().oposto())
 
     def jogos_validos(self):

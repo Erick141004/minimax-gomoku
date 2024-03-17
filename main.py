@@ -1,9 +1,10 @@
 import jogo_velha
+import gomoku
 from minimax import melhor_jogada_agente, melhor_jogada_agente_poda
 
 if __name__ == "__main__":
 
-    jogo = jogo_velha.JogoVelha()
+    jogo = gomoku.Gomoku()
 
     def jogada_humano():
         jogada = -1

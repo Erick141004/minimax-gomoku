@@ -1,4 +1,5 @@
-from jogo import Jogo, Jogador
+from jogo import Jogo
+
 
 def minimax(jogo, turno_max, jogador, profundidade_maxima = 8):
   # se o jogo acabou ou se a profundidade é máxima
