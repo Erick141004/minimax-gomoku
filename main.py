@@ -9,7 +9,7 @@ if __name__ == "__main__":
     def jogada_humano():
         jogada = -1
         while jogada not in jogo.jogos_validos():
-            jogada = int(input("Escolha um quadrado (0-8):"))
+            jogada = int(input("Escolha um quadrado (0-14):"))
         return jogada
 
     while True:
@@ -21,7 +21,8 @@ if __name__ == "__main__":
         elif jogo.empate():
             print("Empate!")
             break
-        computador = melhor_jogada_agente(jogo)
+        # computador = melhor_jogada_agente_poda(jogo)
+        computador = jogada_humano()
         print(f"Jogada do Computador é {computador}")
         jogo = jogo.jogar(computador)
         print(jogo)
