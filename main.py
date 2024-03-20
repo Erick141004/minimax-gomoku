@@ -9,7 +9,7 @@ if __name__ == "__main__":
     def jogada_humano():
         jogada = -1
         while jogada not in jogo.jogos_validos():
-            jogada = int(input("Escolha um quadrado (0-14):"))
+            jogada = int(input("Escolha um quadrado (0-224):"))
         return jogada
 
     while True:

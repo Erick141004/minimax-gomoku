@@ -22,9 +22,13 @@ class Quadrado(Jogador, Enum):
 
 
 class Gomoku(Jogo):
+    rodada = 0
+
     def __init__(self, tabuleiro=[Quadrado.V] * 225, turno=Quadrado.B):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
         self._turno = turno
+        self.regioes = []
+        self.popula_regioes()
 
     def turno(self):
         return self._turno
@@ -32,10 +36,33 @@ class Gomoku(Jogo):
     def jogar(self, casa_jogada):
         temp = self.tabuleiro.copy()
         temp[casa_jogada] = self._turno
+        Gomoku.rodada += 1
         return Gomoku(temp, self.turno().oposto())
 
     def jogos_validos(self):
+        Gomoku.rodada += 1
         return [p for p in range(len(self.tabuleiro)) if self.tabuleiro[p] == Quadrado.V]
+
+    def popula_regioes(self):
+        regiao = []
+        tam_linha = int(np.sqrt(len(self.tabuleiro)))
+        for i in range(1, 14, 3):
+            for j in range(0, 5):
+                pos_meio_regiao = (i * tam_linha + 1) + 3 * j
+                regiao.append(pos_meio_regiao - tam_linha - 1)
+                regiao.append(pos_meio_regiao - tam_linha)
+                regiao.append(pos_meio_regiao - tam_linha + 1)
+                regiao.append(pos_meio_regiao - 1)
+                regiao.append(pos_meio_regiao)
+                regiao.append(pos_meio_regiao + 1)
+                regiao.append(pos_meio_regiao + tam_linha - 1)
+                regiao.append(pos_meio_regiao + tam_linha)
+                regiao.append(pos_meio_regiao + tam_linha + 1)
+
+                self.regioes.append(regiao.copy())
+                regiao.clear()
+
+        return 0
 
     def venceu(self):
         return self._venceu_linhas(self.tabuleiro) or self._venceu_colunas(self.tabuleiro) or self._venceu_diagonal(
@@ -224,6 +251,18 @@ class Gomoku(Jogo):
             return 1
         else:
             return 0
+
+    def regiao_humano(self):
+        self.pos_anteriores = set()
+        pos_inimigo = np.where(self.tabuleiro == "B")
+
+        if pos_inimigo is not self.pos_anteriores:
+
+            self.pos_anteriores.update(pos_inimigo)
+
+
+
+
 
     def __str__(self):
         tabuleiro_atual = ""
