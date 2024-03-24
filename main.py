@@ -15,16 +15,24 @@ if __name__ == "__main__":
     while True:
         humano = jogada_humano()
         jogo = jogo.jogar(humano)
+
+        jogo.atualiza_pontos_observaveis(humano)
+        print(f"Pontos observaveis: {jogo.pontos_observaveis}")
+
         if jogo.venceu():
             print("Humano Venceu!")
             break
         elif jogo.empate():
             print("Empate!")
             break
-        computador = melhor_jogada_agente_poda(jogo)
+        computador = melhor_jogada_agente_poda(jogo, 15)
         # computador = jogada_humano()
         print(f"Jogada do Computador é {computador}")
         jogo = jogo.jogar(computador)
+
+        jogo.atualiza_pontos_observaveis(computador)
+        print(f"Pontos observaveis: {jogo.pontos_observaveis}")
+
         print(jogo)
         if jogo.venceu():
             print("Computador venceu!")
