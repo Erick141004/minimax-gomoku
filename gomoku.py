@@ -80,6 +80,23 @@ class Gomoku(Jogo):
         return pontos_nao_jogados
 
     def atualiza_pontos_observaveis(self, ponto_jogado):
+        pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
+        pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
+
+        Gomoku.pontos_observaveis.update(pontos_jogaveis)
+
+        if ponto_jogado in Gomoku.pontos_observaveis:
+            Gomoku.pontos_observaveis.remove(ponto_jogado)
+
+    def atualiza_pontos_observaveis_simulacao(self, ponto_jogado):
+        pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
+        pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
+
+        pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
+
+        return pontos_jogaveis_dentro_observaveis
+
+    def retorna_pontos_possiveis(self, ponto_jogado):
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
         pos_meio = ponto_jogado
         pontos_possiveis = None
@@ -128,13 +145,7 @@ class Gomoku(Jogo):
                                     pos_meio - 1,
                                     pos_meio + tam_linha - 1,
                                     pos_meio + tam_linha]
-
-        pontos_possiveis = self.verifica_ponto_jogavel(pontos_possiveis)
-
-        Gomoku.pontos_observaveis.update(pontos_possiveis)
-
-        if ponto_jogado in Gomoku.pontos_observaveis:
-            Gomoku.pontos_observaveis.remove(ponto_jogado)
+        return pontos_possiveis
 
     def venceu(self):
         return self._venceu_linhas(self.tabuleiro) or self._venceu_colunas(self.tabuleiro) or self._venceu_diagonal(
@@ -316,13 +327,28 @@ class Gomoku(Jogo):
 
         return False
 
-    def calcular_utilidade(self, jogador):
+    def calcula_diferenca_peso(self, proximo_jogo):
+        vizinhos = self.retorna_pontos_possiveis(proximo_jogo)
+
+        quantidade_humano = 0
+        quantidade_agente = 0
+
+        for casa in vizinhos:
+            if self.tabuleiro[casa] == Quadrado.B:
+                quantidade_humano += 1
+            elif self.tabuleiro[casa] == Quadrado.P:
+                quantidade_agente += 1
+
+        return quantidade_agente - quantidade_humano
+
+    def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
-            return -1
+            return -100
         elif self.venceu() and self._turno != jogador:
-            return 1
+            return 100
         else:
-            return 0
+            return self.calcula_diferenca_peso(proximo_jogo)
+
 
     def regiao_humano(self):
         self.pos_anteriores = set()

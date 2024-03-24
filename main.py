@@ -17,6 +17,7 @@ if __name__ == "__main__":
         jogo = jogo.jogar(humano)
 
         jogo.atualiza_pontos_observaveis(humano)
+
         print(f"Pontos observaveis: {jogo.pontos_observaveis}")
 
         if jogo.venceu():
@@ -25,7 +26,7 @@ if __name__ == "__main__":
         elif jogo.empate():
             print("Empate!")
             break
-        computador = melhor_jogada_agente_poda(jogo, 15)
+        computador = melhor_jogada_agente(jogo, 2)
         # computador = jogada_humano()
         print(f"Jogada do Computador é {computador}")
         jogo = jogo.jogar(computador)
