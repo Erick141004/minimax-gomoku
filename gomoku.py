@@ -327,11 +327,64 @@ class Gomoku(Jogo):
 
         return False
 
+    def estrela_linhas_pontos(self, linha):
+
+        pontos = 0
+
+        for casa in linha:
+            if self.tabuleiro[casa] == Quadrado.B:
+                return 0
+            elif self.tabuleiro[casa] == Quadrado.P:
+                pontos += 1
+
+        return pontos
+
+
+    def calcula_estrela(self, proximo_jogo):
+
+        tam_linha = int(np.sqrt(len(self.tabuleiro)))
+
+        vertical = [proximo_jogo - (tam_linha * 2),
+                    proximo_jogo - tam_linha,
+                    proximo_jogo,
+                    proximo_jogo + tam_linha,
+                    proximo_jogo + (tam_linha * 2)]
+
+        horizontal = [proximo_jogo - 2,
+                      proximo_jogo - 1,
+                      proximo_jogo,
+                      proximo_jogo + 1,
+                      proximo_jogo + 2]
+
+        diagonal_sl = [proximo_jogo - (tam_linha * 2) - 2,
+                       proximo_jogo - tam_linha - 1,
+                       proximo_jogo,
+                       proximo_jogo + tam_linha + 1,
+                       proximo_jogo + (tam_linha * 2) + 2]
+
+        diagonal_nl = [proximo_jogo + (tam_linha * 2) - 2,
+                       proximo_jogo + tam_linha - 1,
+                       proximo_jogo,
+                       proximo_jogo - tam_linha + 1,
+                       proximo_jogo - (tam_linha * 2) + 2]
+
+        vertical_valor = self.estrela_linhas_pontos(vertical)
+        horizontal_valor = self.estrela_linhas_pontos(horizontal)
+        diagonal_sl_valor = self.estrela_linhas_pontos(diagonal_sl)
+        diagonal_nl_valor = self.estrela_linhas_pontos(diagonal_nl)
+
+        tuplas = [(vertical_valor, vertical), (horizontal_valor, horizontal),
+                  (diagonal_sl_valor, diagonal_sl), (diagonal_nl_valor, diagonal_nl)]
+
+        return max(tuplas)
+
     def calcula_diferenca_peso(self, proximo_jogo):
         vizinhos = self.retorna_pontos_possiveis(proximo_jogo)
 
         quantidade_humano = 0
         quantidade_agente = 0
+
+        linha_melhor = self.calcula_estrela(proximo_jogo)
 
         for casa in vizinhos:
             if self.tabuleiro[casa] == Quadrado.B:
