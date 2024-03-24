@@ -1,18 +1,22 @@
-def minimax(jogo, turno_max, jogador, profundidade_maxima, proximo_jogo):
+def minimax(jogo, turno_max, jogador, profundidade_maxima, prox_jogo):
   # se o jogo acabou ou se a profundidade é máxima
   if jogo.venceu() or jogo.empate() or profundidade_maxima == 0:
-    return jogo.calcular_utilidade(jogador, proximo_jogo)
+    return jogo.calcular_utilidade(jogador, prox_jogo)
 
   if turno_max: # turno do MAX
     melhor_valor = float("-inf") # Menos infinito é o menor valor
-    for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(proximo_jogo):
-      utilidade = minimax(jogo.jogar(proximo_jogo), False, jogador, profundidade_maxima - 1, proximo_jogo)
+    for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
+      utilidade = minimax(jogo.jogar(proximo_jogo), False, jogador, profundidade_maxima - 1, prox_jogo)
+      print(f"MAX vai escolher entre a utilidade {utilidade} e o {melhor_valor} - Utilidade corresponde a casa: {proximo_jogo}")
       melhor_valor = max(utilidade, melhor_valor) # proximo_jogo com o maior valor
+
     return melhor_valor
   else: # turno no MIN
     pior_valor = float("inf") # Mais infinito é o maior valor
-    for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(proximo_jogo):
-      utilidade = minimax(jogo.jogar(proximo_jogo), True, jogador, profundidade_maxima - 1, proximo_jogo)
+    for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
+      utilidade = minimax(jogo.jogar(proximo_jogo), True, jogador, profundidade_maxima - 1, prox_jogo)
+      print(
+        f"MIN vai escolher entre a utilidade {utilidade} e o {pior_valor} - Utilidade corresponde a casa: {proximo_jogo}")
       pior_valor = min(utilidade, pior_valor) # proximo_jogo com o menor valor
     return pior_valor
 

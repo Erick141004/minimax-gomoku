@@ -24,6 +24,7 @@ class Quadrado(Jogador, Enum):
 class Gomoku(Jogo):
 
     pontos_observaveis = set()
+    tabuleiro_atual = None
 
     def __init__(self, tabuleiro=[Quadrado.V] * 225, turno=Quadrado.B):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
@@ -66,6 +67,55 @@ class Gomoku(Jogo):
         # coluna direita sem os cantos
         elif pos in range(29, 224, 15):
             return 8
+        # senao, esta no meio
+        else:
+            return 0
+
+    def regiao_jogada_estrela(self, pos):
+        #canto superior esquerdo
+        if pos == 0:
+            return 1
+        # canto superior direito
+        elif pos == 14:
+            return 2
+        # canto inferior esquerdo
+        elif pos == 210:
+            return 3
+        # canto inferior direito
+        elif pos == 224:
+            return 4
+        # linha superior sem os cantos
+        elif pos in range(2, 13):
+            return 5
+        # linha inferior sem os cantos
+        elif pos in range(212, 223):
+            return 6
+        # coluna esquerda sem os cantos
+        elif pos in range(30, 195, 15):
+            return 7
+        # coluna direita sem os cantos
+        elif pos in range(44, 209, 15):
+            return 8
+        elif pos in [1, 13]:
+            return 9
+        elif pos in [211, 223]:
+            return 10
+        elif pos in [15, 195]:
+            return 11
+        elif pos in [29, 209]:
+            return 12
+        elif pos in [16, 196]:
+            return 13
+        elif pos in [28, 208]:
+            return 14
+        elif pos in range(17, 28):
+            return 15
+        elif pos in range(197, 208):
+            return 16
+        elif pos in range(31, 196, 15):
+            return 17
+        elif pos in range(43, 208, 15):
+            return 18
         # senao, esta no meio
         else:
             return 0
@@ -276,7 +326,7 @@ class Gomoku(Jogo):
             if i == 0:
                 desloca = 0
                 for j in range(tam_linha):
-                    ponto_atual = tabuleiro[90 - (j * tam_linha - desloca)]
+                    ponto_atual = tabuleiro[210 - (j * tam_linha - desloca)]
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -293,7 +343,7 @@ class Gomoku(Jogo):
             else:
                 desloca_direita = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[90 + i - (j * tam_linha - desloca_direita)]
+                    ponto_atual = tabuleiro[210 + i - (j * tam_linha - desloca_direita)]
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -310,7 +360,7 @@ class Gomoku(Jogo):
 
                 desloca_cima = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[(90 - i * tam_linha) - (j * tam_linha - desloca_cima)]
+                    ponto_atual = tabuleiro[(210 - i * tam_linha) - (j * tam_linha - desloca_cima)]
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -327,22 +377,26 @@ class Gomoku(Jogo):
 
         return False
 
-    def estrela_linhas_pontos(self, linha):
-
+    def estrela_linhas_pontos(self, linha, jogador):
         pontos = 0
 
         for casa in linha:
-            if self.tabuleiro[casa] == Quadrado.B:
-                return 0
-            elif self.tabuleiro[casa] == Quadrado.P:
-                pontos += 1
+            if casa in range(0, len(self.tabuleiro)):
+                if Gomoku.tabuleiro_atual[casa] != jogador and Gomoku.tabuleiro_atual[casa] != Quadrado.V:
+                    return 0
+                elif Gomoku.tabuleiro_atual[casa] == Quadrado.V:
+                    pontos += 0
+                else:
+                    pontos += 1
 
         return pontos
 
-
-    def calcula_estrela(self, proximo_jogo):
+    def calcula_estrela(self, proximo_jogo, jogador):
 
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
+        vertical = horizontal = diagonal_sl = diagonal_nl = None
+
+        regiao_tabuleiro = self.regiao_jogada_estrela(proximo_jogo)
 
         vertical = [proximo_jogo - (tam_linha * 2),
                     proximo_jogo - tam_linha,
@@ -368,10 +422,10 @@ class Gomoku(Jogo):
                        proximo_jogo - tam_linha + 1,
                        proximo_jogo - (tam_linha * 2) + 2]
 
-        vertical_valor = self.estrela_linhas_pontos(vertical)
-        horizontal_valor = self.estrela_linhas_pontos(horizontal)
-        diagonal_sl_valor = self.estrela_linhas_pontos(diagonal_sl)
-        diagonal_nl_valor = self.estrela_linhas_pontos(diagonal_nl)
+        vertical_valor = self.estrela_linhas_pontos(vertical, jogador)
+        horizontal_valor = self.estrela_linhas_pontos(horizontal, jogador)
+        diagonal_sl_valor = self.estrela_linhas_pontos(diagonal_sl, jogador)
+        diagonal_nl_valor = self.estrela_linhas_pontos(diagonal_nl, jogador)
 
         tuplas = [(vertical_valor, vertical), (horizontal_valor, horizontal),
                   (diagonal_sl_valor, diagonal_sl), (diagonal_nl_valor, diagonal_nl)]
@@ -384,15 +438,22 @@ class Gomoku(Jogo):
         quantidade_humano = 0
         quantidade_agente = 0
 
-        linha_melhor = self.calcula_estrela(proximo_jogo)
+        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Quadrado.P)
+        linha_melhor_humano = self.calcula_estrela(proximo_jogo, Quadrado.B)
 
-        for casa in vizinhos:
-            if self.tabuleiro[casa] == Quadrado.B:
-                quantidade_humano += 1
-            elif self.tabuleiro[casa] == Quadrado.P:
-                quantidade_agente += 1
+        # for casa in vizinhos:
+        #     if Gomoku.tabuleiro_atual[casa] == Quadrado.B:
+        #         quantidade_humano += 1
+        #     elif Gomoku.tabuleiro_atual[casa] == Quadrado.P:
+        #         quantidade_agente += 1
+        # #quantidade_agente - quantidade_humano +
 
-        return quantidade_agente - quantidade_humano
+        if linha_melhor_agente[0] <= linha_melhor_humano[0]:
+            return linha_melhor_humano[0] * 10 + 1
+        else:
+            return linha_melhor_agente[0] * 10
+
+
 
     def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
@@ -401,7 +462,6 @@ class Gomoku(Jogo):
             return 100
         else:
             return self.calcula_diferenca_peso(proximo_jogo)
-
 
     def regiao_humano(self):
         self.pos_anteriores = set()
