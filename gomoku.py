@@ -71,55 +71,6 @@ class Gomoku(Jogo):
         else:
             return 0
 
-    def regiao_jogada_estrela(self, pos):
-        #canto superior esquerdo
-        if pos == 0:
-            return 1
-        # canto superior direito
-        elif pos == 14:
-            return 2
-        # canto inferior esquerdo
-        elif pos == 210:
-            return 3
-        # canto inferior direito
-        elif pos == 224:
-            return 4
-        # linha superior sem os cantos
-        elif pos in range(2, 13):
-            return 5
-        # linha inferior sem os cantos
-        elif pos in range(212, 223):
-            return 6
-        # coluna esquerda sem os cantos
-        elif pos in range(30, 195, 15):
-            return 7
-        # coluna direita sem os cantos
-        elif pos in range(44, 209, 15):
-            return 8
-        elif pos in [1, 13]:
-            return 9
-        elif pos in [211, 223]:
-            return 10
-        elif pos in [15, 195]:
-            return 11
-        elif pos in [29, 209]:
-            return 12
-        elif pos in [16, 196]:
-            return 13
-        elif pos in [28, 208]:
-            return 14
-        elif pos in range(17, 28):
-            return 15
-        elif pos in range(197, 208):
-            return 16
-        elif pos in range(31, 196, 15):
-            return 17
-        elif pos in range(43, 208, 15):
-            return 18
-        # senao, esta no meio
-        else:
-            return 0
-
     def verifica_ponto_jogavel(self, pontos_possiveis):
         pontos_nao_jogados = []
 
@@ -381,7 +332,7 @@ class Gomoku(Jogo):
         pontos = 0
 
         for casa in linha:
-            if casa in range(0, len(self.tabuleiro)):
+            if casa in range(len(self.tabuleiro)):
                 if Gomoku.tabuleiro_atual[casa] != jogador and Gomoku.tabuleiro_atual[casa] != Quadrado.V:
                     return 0
                 elif Gomoku.tabuleiro_atual[casa] == Quadrado.V:
