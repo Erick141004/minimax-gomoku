@@ -347,8 +347,6 @@ class Gomoku(Jogo):
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
         vertical = horizontal = diagonal_sl = diagonal_nl = None
 
-        regiao_tabuleiro = self.regiao_jogada_estrela(proximo_jogo)
-
         vertical = [proximo_jogo - (tam_linha * 2),
                     proximo_jogo - tam_linha,
                     proximo_jogo,
