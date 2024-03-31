@@ -22,23 +22,29 @@ def minimax(jogo, turno_max, jogador, profundidade_maxima, prox_jogo):
         return pior_valor
 
 
-def minimax_alfabeta(jogo, turno_max, jogador, profundidade_maxima, prox_jogo, alfa=float("-inf"), beta=float("inf")):
+def minimax_alfabeta(jogo, turno_max, jogador, profundidade_maxima, prox_jogo, len_atualizado, alfa=float("-inf"), beta=float("inf")):
     # se o jogo acabou ou se a profundidade é máxima
     if jogo.venceu() or jogo.empate() or profundidade_maxima == 0:
         return jogo.calcular_utilidade(jogador, prox_jogo)
 
     if turno_max:  # turno do MAX
+        if not len_atualizado and profundidade_maxima > len(jogo.atualiza_pontos_observaveis_simulacao(prox_jogo)):
+            profundidade_maxima = len(jogo.atualiza_pontos_observaveis_simulacao(prox_jogo))
+
         for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
             utilidade = minimax_alfabeta(jogo.jogar(proximo_jogo), False, jogador, profundidade_maxima - 1, prox_jogo,
-                                         alfa, beta)
+                                         True, alfa, beta)
             alfa = max(utilidade, alfa)
             if beta <= alfa:
                 continue
             return alfa
     else:  # turno no MIN
+        if not len_atualizado and profundidade_maxima > len(jogo.atualiza_pontos_observaveis_simulacao(prox_jogo)):
+            profundidade_maxima = len(jogo.atualiza_pontos_observaveis_simulacao(prox_jogo))
+
         for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
             utilidade = minimax_alfabeta(jogo.jogar(proximo_jogo), True, jogador, profundidade_maxima - 1, prox_jogo,
-                                         alfa, beta)
+                                         True, alfa, beta)
             beta = min(utilidade, beta)
             if beta <= alfa:
                 continue
@@ -61,7 +67,7 @@ def melhor_jogada_agente_poda(jogo, profundidade_maxima):
     melhor_valor = float("-inf")
     melhor_jogada = -1
     for proximo_jogo in jogo.pontos_observaveis:
-        utilidade = minimax_alfabeta(jogo.jogar(proximo_jogo), False, jogo.turno(), profundidade_maxima, proximo_jogo)
+        utilidade = minimax_alfabeta(jogo.jogar(proximo_jogo), False, jogo.turno(), profundidade_maxima, proximo_jogo, False)
         if utilidade > melhor_valor:
             melhor_valor = utilidade
             melhor_jogada = proximo_jogo

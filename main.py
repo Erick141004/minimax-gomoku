@@ -31,7 +31,7 @@ if __name__ == "__main__":
             print("Empate!")
             break
 
-        computador = melhor_jogada_agente_poda(jogo, 3)
+        computador = melhor_jogada_agente_poda(jogo, 8)
         # computador = jogada_humano()
         print(f"Jogada do Computador é {computador}")
         jogo = jogo.jogar(computador)

@@ -93,7 +93,10 @@ class Gomoku(Jogo):
         pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
-        pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
+        #pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
+        pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis))
+        print(f"Ponto jogado: {ponto_jogado}")
+        print(pontos_jogaveis_dentro_observaveis)
 
         return pontos_jogaveis_dentro_observaveis
 
