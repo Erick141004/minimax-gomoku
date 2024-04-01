@@ -1,4 +1,3 @@
-import jogo_velha
 import gomoku
 from minimax import melhor_jogada_agente, melhor_jogada_agente_poda
 
