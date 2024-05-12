@@ -1,6 +1,7 @@
-from gomoku import Gomoku
+from gomoku import Gomoku, Quadrado
 
-def minimax(jogo, turno_max, jogador, profundidade_maxima, prox_jogo):
+
+def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, prox_jogo):
     # se o jogo acabou ou se a profundidade é máxima
     if jogo.venceu() or jogo.empate() or profundidade_maxima == 0:
         return jogo.calcular_utilidade(jogador, prox_jogo)
@@ -105,7 +106,7 @@ def minimax_alfabeta(
 
 
 # Encotrar o melhor movimento do computador
-def melhor_jogada_agente(jogo, profundidade_maxima):
+def melhor_jogada_agente(jogo: Gomoku, profundidade_maxima: int):
 
     Gomoku.turno_atual = Gomoku.turno_atual.oposto()
 

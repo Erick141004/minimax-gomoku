@@ -1,5 +1,4 @@
 from enum import Enum
-from jogo import Jogo
 from jogador import Jogador
 import numpy as np
 
@@ -21,13 +20,15 @@ class Quadrado(Jogador, Enum):
         return self.value
 
 
-class Gomoku(Jogo):
+class Gomoku:
 
     pontos_observaveis = set()
-    tabuleiro_atual = None
+    tabuleiro_atual = []
     turno_atual = Quadrado.V
 
-    def __init__(self, tabuleiro=[Quadrado.V] * 225, turno=Quadrado.B):
+    def __init__(
+        self, tabuleiro: list[Quadrado] = [Quadrado.V] * 225, turno=Quadrado.B
+    ):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
         self._turno = turno
 
@@ -35,10 +36,10 @@ class Gomoku(Jogo):
         return self._turno
 
     def jogar(self, ponto_jogado):
-        temp = self.tabuleiro.copy()
-        temp[ponto_jogado] = self._turno
+        novo_tabuleiro = self.tabuleiro.copy()
+        novo_tabuleiro[ponto_jogado] = self._turno
 
-        return Gomoku(temp, self.turno().oposto())
+        return Gomoku(novo_tabuleiro, self.turno().oposto())
 
     def jogos_validos(self):
         return [
@@ -74,12 +75,12 @@ class Gomoku(Jogo):
         else:
             return 0
 
-    def verifica_ponto_jogavel(self, pontos_possiveis):
-        pontos_nao_jogados = []
+    def verifica_ponto_jogavel(self, pontos_possiveis) -> set:
+        pontos_nao_jogados = set()
 
         for ponto in pontos_possiveis:
             if self.tabuleiro[ponto] == Quadrado.V:
-                pontos_nao_jogados.append(ponto)
+                pontos_nao_jogados.add(ponto)
 
         return pontos_nao_jogados
 
@@ -96,10 +97,9 @@ class Gomoku(Jogo):
         pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
-        # pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
-        pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis))
+        pontos_jogaveis_dentro_observaveis = list(pontos_jogaveis)
         print(f"Ponto jogado: {ponto_jogado}")
-        print(pontos_jogaveis_dentro_observaveis)
+        print(f"Pontos observaveis simulacao: {pontos_jogaveis_dentro_observaveis}")
 
         return pontos_jogaveis_dentro_observaveis
 
@@ -170,6 +170,9 @@ class Gomoku(Jogo):
             or self._venceu_colunas(self.tabuleiro)
             or self._venceu_diagonal(self.tabuleiro)
         )
+
+    def empate(self):
+        return False
 
     def _venceu_linhas(self, tabuleiro):
         cor_atual = None
@@ -435,30 +438,6 @@ class Gomoku(Jogo):
         else:
             return ponto
 
-    def calcula_diferenca_peso(self, proximo_jogo):
-        # vizinhos = self.retorna_pontos_possiveis(proximo_jogo)
-
-        # quantidade_humano = 0
-        # quantidade_agente = 0
-
-        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Gomoku.turno_atual)
-        linha_melhor_humano = self.calcula_estrela(
-            proximo_jogo, Gomoku.turno_atual.oposto()
-        )
-
-        # for casa in vizinhos:
-        #     if Gomoku.tabuleiro_atual[casa] == Quadrado.B:
-        #         quantidade_humano += 1
-        #     elif Gomoku.tabuleiro_atual[casa] == Quadrado.P:
-        #         quantidade_agente += 1
-        # #quantidade_agente - quantidade_humano +
-
-        if linha_melhor_agente[0] <= linha_melhor_humano[0]:
-            # return linha_melhor_humano[0] * 10 + 1
-            return linha_melhor_humano[0] * 100
-        else:
-            return linha_melhor_agente[0] * 10
-
     def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
             return -100
@@ -466,6 +445,18 @@ class Gomoku(Jogo):
             return 100
         else:
             return self.calcula_diferenca_peso(proximo_jogo)
+
+    def calcula_diferenca_peso(self, proximo_jogo):
+        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Gomoku.turno_atual)
+        linha_melhor_humano = self.calcula_estrela(
+            proximo_jogo, Gomoku.turno_atual.oposto()
+        )
+
+        if linha_melhor_agente[0] <= linha_melhor_humano[0]:
+            # return linha_melhor_humano[0] * 10 + 1
+            return linha_melhor_humano[0] * 100
+        else:
+            return linha_melhor_agente[0] * 10
 
     def regiao_humano(self):
         self.pos_anteriores = set()
