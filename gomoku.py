@@ -25,6 +25,7 @@ class Gomoku(Jogo):
 
     pontos_observaveis = set()
     tabuleiro_atual = None
+    turno_atual = Quadrado.V
 
     def __init__(self, tabuleiro=[Quadrado.V] * 225, turno=Quadrado.B):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
@@ -40,10 +41,12 @@ class Gomoku(Jogo):
         return Gomoku(temp, self.turno().oposto())
 
     def jogos_validos(self):
-        return [p for p in range(len(self.tabuleiro)) if self.tabuleiro[p] == Quadrado.V]
+        return [
+            p for p in range(len(self.tabuleiro)) if self.tabuleiro[p] == Quadrado.V
+        ]
 
     def regiao_jogada(self, pos):
-        #canto superior esquerdo
+        # canto superior esquerdo
         if pos == 0:
             return 1
         # canto superior direito
@@ -75,8 +78,8 @@ class Gomoku(Jogo):
         pontos_nao_jogados = []
 
         for ponto in pontos_possiveis:
-           if self.tabuleiro[ponto] == Quadrado.V:
-               pontos_nao_jogados.append(ponto)
+            if self.tabuleiro[ponto] == Quadrado.V:
+                pontos_nao_jogados.append(ponto)
 
         return pontos_nao_jogados
 
@@ -93,7 +96,7 @@ class Gomoku(Jogo):
         pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
-        #pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
+        # pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis) & Gomoku.pontos_observaveis)
         pontos_jogaveis_dentro_observaveis = list(set(pontos_jogaveis))
         print(f"Ponto jogado: {ponto_jogado}")
         print(pontos_jogaveis_dentro_observaveis)
@@ -107,16 +110,18 @@ class Gomoku(Jogo):
 
         regiao_jogada = self.regiao_jogada(ponto_jogado)
 
-        match(regiao_jogada):
+        match (regiao_jogada):
             case 0:
-                pontos_possiveis = [pos_meio - tam_linha - 1,
-                                    pos_meio - tam_linha,
-                                    pos_meio - tam_linha + 1,
-                                    pos_meio - 1,
-                                    pos_meio + 1,
-                                    pos_meio + tam_linha - 1,
-                                    pos_meio + tam_linha,
-                                    pos_meio + tam_linha + 1]
+                pontos_possiveis = [
+                    pos_meio - tam_linha - 1,
+                    pos_meio - tam_linha,
+                    pos_meio - tam_linha + 1,
+                    pos_meio - 1,
+                    pos_meio + 1,
+                    pos_meio + tam_linha - 1,
+                    pos_meio + tam_linha,
+                    pos_meio + tam_linha + 1,
+                ]
             case 1:
                 pontos_possiveis = [1, 15, 16]
             case 2:
@@ -126,34 +131,45 @@ class Gomoku(Jogo):
             case 4:
                 pontos_possiveis = [208, 209, 223]
             case 5:
-                pontos_possiveis = [pos_meio - 1,
-                                    pos_meio + 1,
-                                    pos_meio + tam_linha - 1,
-                                    pos_meio + tam_linha,
-                                    pos_meio + tam_linha + 1]
+                pontos_possiveis = [
+                    pos_meio - 1,
+                    pos_meio + 1,
+                    pos_meio + tam_linha - 1,
+                    pos_meio + tam_linha,
+                    pos_meio + tam_linha + 1,
+                ]
             case 6:
-                pontos_possiveis = [pos_meio - tam_linha - 1,
-                                    pos_meio - tam_linha,
-                                    pos_meio - tam_linha + 1,
-                                    pos_meio - 1,
-                                    pos_meio + 1]
+                pontos_possiveis = [
+                    pos_meio - tam_linha - 1,
+                    pos_meio - tam_linha,
+                    pos_meio - tam_linha + 1,
+                    pos_meio - 1,
+                    pos_meio + 1,
+                ]
             case 7:
-                pontos_possiveis = [pos_meio - tam_linha,
-                                    pos_meio - tam_linha + 1,
-                                    pos_meio + 1,
-                                    pos_meio + tam_linha,
-                                    pos_meio + tam_linha + 1]
+                pontos_possiveis = [
+                    pos_meio - tam_linha,
+                    pos_meio - tam_linha + 1,
+                    pos_meio + 1,
+                    pos_meio + tam_linha,
+                    pos_meio + tam_linha + 1,
+                ]
             case 8:
-                pontos_possiveis = [pos_meio - tam_linha - 1,
-                                    pos_meio - tam_linha,
-                                    pos_meio - 1,
-                                    pos_meio + tam_linha - 1,
-                                    pos_meio + tam_linha]
+                pontos_possiveis = [
+                    pos_meio - tam_linha - 1,
+                    pos_meio - tam_linha,
+                    pos_meio - 1,
+                    pos_meio + tam_linha - 1,
+                    pos_meio + tam_linha,
+                ]
         return pontos_possiveis
 
     def venceu(self):
-        return self._venceu_linhas(self.tabuleiro) or self._venceu_colunas(self.tabuleiro) or self._venceu_diagonal(
-            self.tabuleiro)
+        return (
+            self._venceu_linhas(self.tabuleiro)
+            or self._venceu_colunas(self.tabuleiro)
+            or self._venceu_diagonal(self.tabuleiro)
+        )
 
     def _venceu_linhas(self, tabuleiro):
         cor_atual = None
@@ -251,7 +267,9 @@ class Gomoku(Jogo):
 
                 desloca_baixo = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[i * tam_linha + (j * tam_linha + desloca_baixo)]
+                    ponto_atual = tabuleiro[
+                        i * tam_linha + (j * tam_linha + desloca_baixo)
+                    ]
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -314,7 +332,9 @@ class Gomoku(Jogo):
 
                 desloca_cima = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[(210 - i * tam_linha) - (j * tam_linha - desloca_cima)]
+                    ponto_atual = tabuleiro[
+                        (210 - i * tam_linha) - (j * tam_linha - desloca_cima)
+                    ]
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -336,9 +356,17 @@ class Gomoku(Jogo):
 
         for casa in linha:
             if casa in range(len(self.tabuleiro)):
-                if Gomoku.tabuleiro_atual[casa] != jogador and Gomoku.tabuleiro_atual[casa] != Quadrado.V:
-                    return 0
-                elif Gomoku.tabuleiro_atual[casa] == Quadrado.V:
+                if (
+                    # self.tabuleiro[casa] != jogador
+                    # and self.tabuleiro[casa] != Quadrado.V
+                    self.tabuleiro[casa]
+                    == jogador.oposto()
+                ):
+                    if jogador == Gomoku.turno_atual.oposto():
+                        return pontos
+                    else:
+                        return 0
+                elif self.tabuleiro[casa] == Quadrado.V:
                     pontos += 0
                 else:
                     pontos += 1
@@ -350,48 +378,73 @@ class Gomoku(Jogo):
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
         vertical = horizontal = diagonal_sl = diagonal_nl = None
 
-        vertical = [proximo_jogo - (tam_linha * 2),
-                    proximo_jogo - tam_linha,
-                    proximo_jogo,
-                    proximo_jogo + tam_linha,
-                    proximo_jogo + (tam_linha * 2)]
+        origem = proximo_jogo
 
-        horizontal = [proximo_jogo - 2,
-                      proximo_jogo - 1,
-                      proximo_jogo,
-                      proximo_jogo + 1,
-                      proximo_jogo + 2]
+        vertical = [
+            self.valida_casa_linha(origem, origem - (tam_linha * 2), 2),
+            self.valida_casa_linha(origem, origem - tam_linha, 1),
+            origem,
+            self.valida_casa_linha(origem, origem + tam_linha, 1),
+            self.valida_casa_linha(origem, origem + (tam_linha * 2), 2),
+        ]
 
-        diagonal_sl = [proximo_jogo - (tam_linha * 2) - 2,
-                       proximo_jogo - tam_linha - 1,
-                       proximo_jogo,
-                       proximo_jogo + tam_linha + 1,
-                       proximo_jogo + (tam_linha * 2) + 2]
+        horizontal = [
+            self.valida_casa_linha(origem, origem - 2, 0),
+            self.valida_casa_linha(origem, origem - 1, 0),
+            origem,
+            self.valida_casa_linha(origem, origem + 1, 0),
+            self.valida_casa_linha(origem, origem + 2, 0),
+        ]
 
-        diagonal_nl = [proximo_jogo + (tam_linha * 2) - 2,
-                       proximo_jogo + tam_linha - 1,
-                       proximo_jogo,
-                       proximo_jogo - tam_linha + 1,
-                       proximo_jogo - (tam_linha * 2) + 2]
+        diagonal_sl = [
+            self.valida_casa_linha(origem, origem - (tam_linha * 2) - 2, 2),
+            self.valida_casa_linha(origem, origem - tam_linha - 1, 1),
+            origem,
+            self.valida_casa_linha(origem, origem + tam_linha + 1, 1),
+            self.valida_casa_linha(origem, origem + (tam_linha * 2) + 2, 2),
+        ]
+
+        diagonal_nl = [
+            self.valida_casa_linha(origem, origem + (tam_linha * 2) - 2, 2),
+            self.valida_casa_linha(origem, origem + tam_linha - 1, 1),
+            origem,
+            self.valida_casa_linha(origem, origem - tam_linha + 1, 1),
+            self.valida_casa_linha(origem, origem - (tam_linha * 2) + 2, 2),
+        ]
 
         vertical_valor = self.estrela_linhas_pontos(vertical, jogador)
         horizontal_valor = self.estrela_linhas_pontos(horizontal, jogador)
         diagonal_sl_valor = self.estrela_linhas_pontos(diagonal_sl, jogador)
         diagonal_nl_valor = self.estrela_linhas_pontos(diagonal_nl, jogador)
 
-        tuplas = [(vertical_valor, vertical), (horizontal_valor, horizontal),
-                  (diagonal_sl_valor, diagonal_sl), (diagonal_nl_valor, diagonal_nl)]
+        tuplas = [
+            (vertical_valor, vertical),
+            (horizontal_valor, horizontal),
+            (diagonal_sl_valor, diagonal_sl),
+            (diagonal_nl_valor, diagonal_nl),
+        ]
 
         return max(tuplas)
 
+    def valida_casa_linha(self, origem, ponto, distancia):
+        linha_origem = origem // 15
+        linha_ponto = ponto // 15
+
+        if abs(linha_ponto - linha_origem) != distancia:
+            return -1
+        else:
+            return ponto
+
     def calcula_diferenca_peso(self, proximo_jogo):
-        vizinhos = self.retorna_pontos_possiveis(proximo_jogo)
+        # vizinhos = self.retorna_pontos_possiveis(proximo_jogo)
 
-        quantidade_humano = 0
-        quantidade_agente = 0
+        # quantidade_humano = 0
+        # quantidade_agente = 0
 
-        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Quadrado.P)
-        linha_melhor_humano = self.calcula_estrela(proximo_jogo, Quadrado.B)
+        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Gomoku.turno_atual)
+        linha_melhor_humano = self.calcula_estrela(
+            proximo_jogo, Gomoku.turno_atual.oposto()
+        )
 
         # for casa in vizinhos:
         #     if Gomoku.tabuleiro_atual[casa] == Quadrado.B:
@@ -401,11 +454,10 @@ class Gomoku(Jogo):
         # #quantidade_agente - quantidade_humano +
 
         if linha_melhor_agente[0] <= linha_melhor_humano[0]:
-            return linha_melhor_humano[0] * 10 + 1
+            # return linha_melhor_humano[0] * 10 + 1
+            return linha_melhor_humano[0] * 100
         else:
             return linha_melhor_agente[0] * 10
-
-
 
     def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
