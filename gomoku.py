@@ -359,14 +359,10 @@ class Gomoku:
 
         for casa in linha:
             if casa in range(len(self.tabuleiro)):
-                if (
-                    # self.tabuleiro[casa] != jogador
-                    # and self.tabuleiro[casa] != Quadrado.V
-                    self.tabuleiro[casa]
-                    == jogador.oposto()
-                ):
+                if self.tabuleiro[casa] == jogador.oposto():
                     if jogador == Gomoku.turno_atual.oposto():
-                        return pontos
+                        # return pontos
+                        pontos += 0
                     else:
                         return 0
                 elif self.tabuleiro[casa] == Quadrado.V:
