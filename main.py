@@ -4,6 +4,7 @@ from minimax import melhor_jogada_agente, melhor_jogada_agente_poda
 if __name__ == "__main__":
 
     jogo = Gomoku()
+    exibir_jogadas = "Jogadas = "
 
     def jogada_humano():
         Gomoku.turno_atual = Quadrado.B
@@ -21,6 +22,8 @@ if __name__ == "__main__":
         jogo.atualiza_pontos_observaveis(humano)
 
         print(f"Pontos observaveis: {jogo.pontos_observaveis}")
+        exibir_jogadas += f"H:{humano}, "
+        print(exibir_jogadas)
 
         if jogo.venceu():
             print(jogo)
@@ -39,6 +42,8 @@ if __name__ == "__main__":
 
         jogo.atualiza_pontos_observaveis(computador)
         print(f"Pontos observaveis: {jogo.pontos_observaveis}")
+        exibir_jogadas += f"C:{computador}, "
+        print(exibir_jogadas)
 
         print(jogo)
         if jogo.venceu():
