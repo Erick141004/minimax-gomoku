@@ -4,9 +4,12 @@ import numpy as np
 
 
 class Quadrado(Jogador, Enum):
-    B = "B"  # branco
-    P = "P"  # preto
-    V = " "  # vazio
+    # B = "B"  # branco
+    B = u'⬜'
+    # P = "P"  # preto
+    P = u'⬛'
+    # V = " "  # vazio
+    V = u'🟫'
 
     def oposto(self):
         if self == Quadrado.B:
@@ -465,8 +468,10 @@ class Gomoku:
         tabuleiro_atual = ""
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
-                tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
+                # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
+                tabuleiro_atual += f"""{self.tabuleiro[i]}({str(i).zfill(3)})"""
             else:
-                tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
+                # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
+                tabuleiro_atual += f"""\n{self.tabuleiro[i]}({str(i).zfill(3)})"""
 
         return tabuleiro_atual
