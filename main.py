@@ -22,7 +22,7 @@ if __name__ == "__main__":
         jogo.atualiza_pontos_observaveis(humano)
 
         print(f"Pontos observaveis: {jogo.pontos_observaveis}")
-        exibir_jogadas += f"H:{humano}, "
+        exibir_jogadas += f"⬜:{humano}, "
         print(exibir_jogadas)
 
         if jogo.venceu():
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
         jogo.atualiza_pontos_observaveis(computador)
         print(f"Pontos observaveis: {jogo.pontos_observaveis}")
-        exibir_jogadas += f"C:{computador}, "
+        exibir_jogadas += f"⬛:{computador}, "
         print(exibir_jogadas)
 
         print(jogo)
