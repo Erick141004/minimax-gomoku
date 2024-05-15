@@ -380,35 +380,51 @@ class Gomoku:
         origem = proximo_jogo
 
         vertical = [
+            self.valida_casa_linha(origem, origem - (tam_linha * 4), 4),
+            self.valida_casa_linha(origem, origem - (tam_linha * 3), 3),
             self.valida_casa_linha(origem, origem - (tam_linha * 2), 2),
             self.valida_casa_linha(origem, origem - tam_linha, 1),
             origem,
             self.valida_casa_linha(origem, origem + tam_linha, 1),
             self.valida_casa_linha(origem, origem + (tam_linha * 2), 2),
+            self.valida_casa_linha(origem, origem + (tam_linha * 3), 3),
+            self.valida_casa_linha(origem, origem + (tam_linha * 4), 4),
         ]
 
         horizontal = [
+            self.valida_casa_linha(origem, origem - 4, 0),
+            self.valida_casa_linha(origem, origem - 3, 0),
             self.valida_casa_linha(origem, origem - 2, 0),
             self.valida_casa_linha(origem, origem - 1, 0),
             origem,
             self.valida_casa_linha(origem, origem + 1, 0),
             self.valida_casa_linha(origem, origem + 2, 0),
+            self.valida_casa_linha(origem, origem + 3, 0),
+            self.valida_casa_linha(origem, origem + 4, 0),
         ]
 
         diagonal_sl = [
+            self.valida_casa_linha(origem, origem - (tam_linha * 4) - 4, 4),
+            self.valida_casa_linha(origem, origem - (tam_linha * 3) - 3, 3),
             self.valida_casa_linha(origem, origem - (tam_linha * 2) - 2, 2),
             self.valida_casa_linha(origem, origem - tam_linha - 1, 1),
             origem,
             self.valida_casa_linha(origem, origem + tam_linha + 1, 1),
             self.valida_casa_linha(origem, origem + (tam_linha * 2) + 2, 2),
+            self.valida_casa_linha(origem, origem + (tam_linha * 3) + 3, 3),
+            self.valida_casa_linha(origem, origem + (tam_linha * 4) + 4, 4),
         ]
 
         diagonal_nl = [
+            self.valida_casa_linha(origem, origem + (tam_linha * 4) - 4, 4),
+            self.valida_casa_linha(origem, origem + (tam_linha * 3) - 3, 3),
             self.valida_casa_linha(origem, origem + (tam_linha * 2) - 2, 2),
             self.valida_casa_linha(origem, origem + tam_linha - 1, 1),
             origem,
             self.valida_casa_linha(origem, origem - tam_linha + 1, 1),
             self.valida_casa_linha(origem, origem - (tam_linha * 2) + 2, 2),
+            self.valida_casa_linha(origem, origem - (tam_linha * 3) + 3, 3),
+            self.valida_casa_linha(origem, origem - (tam_linha * 4) + 4, 4),
         ]
 
         vertical_valor = self.estrela_linhas_pontos(vertical, jogador)
