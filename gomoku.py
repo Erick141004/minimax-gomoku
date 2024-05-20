@@ -5,11 +5,11 @@ import numpy as np
 
 class Quadrado(Jogador, Enum):
     # B = "B"  # branco
-    B = u'⬜'
+    B = "⬜"
     # P = "P"  # preto
-    P = u'⬛'
+    P = "⬛"
     # V = " "  # vazio
-    V = u'🟫'
+    V = "🟫"
 
     def oposto(self):
         if self == Quadrado.B:
@@ -477,7 +477,7 @@ class Gomoku:
         if linha_melhor_agente[0] <= linha_melhor_humano[0]:
             print("Pontuacao para a jogada do HUMANO")
             # return linha_melhor_humano[0] * 10 + 1
-            return linha_melhor_humano[0] * 100
+            return (linha_melhor_humano[0] * 10) + 1
         else:
             return linha_melhor_agente[0] * 10
 
