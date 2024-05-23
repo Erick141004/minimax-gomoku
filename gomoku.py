@@ -96,13 +96,14 @@ class Gomoku:
         if ponto_jogado in Gomoku.pontos_observaveis:
             Gomoku.pontos_observaveis.remove(ponto_jogado)
 
-    def atualiza_pontos_observaveis_simulacao(self, ponto_jogado):
+    def atualiza_pontos_observaveis_simulacao(self, pontos_observaveis_atual, ponto_jogado):
         pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
-        pontos_jogaveis_dentro_observaveis = list(pontos_jogaveis)
+        pontos_observaveis_atual.update(pontos_jogaveis)
 
-        return pontos_jogaveis_dentro_observaveis
+        if ponto_jogado in pontos_observaveis_atual:
+            pontos_observaveis_atual.remove(ponto_jogado)
 
     def retorna_pontos_possiveis(self, ponto_jogado):
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
@@ -486,9 +487,9 @@ class Gomoku:
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]}({str(i).zfill(3)})"""
+                tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""\n{self.tabuleiro[i]}({str(i).zfill(3)})"""
+                tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
 
         return tabuleiro_atual
