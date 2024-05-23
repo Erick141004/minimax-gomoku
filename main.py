@@ -21,9 +21,7 @@ if __name__ == "__main__":
 
         jogo.atualiza_pontos_observaveis(humano)
 
-        print(f"Pontos observaveis: {jogo.pontos_observaveis}")
         exibir_jogadas += f"⬜:{humano}, "
-        print(exibir_jogadas)
 
         if jogo.venceu():
             print(jogo)
@@ -34,10 +32,9 @@ if __name__ == "__main__":
             print("Empate!")
             break
 
-        # computador = melhor_jogada_agente(jogo, 2)
-        computador = melhor_jogada_agente_poda(jogo, 2)
+        computador = melhor_jogada_agente(jogo, 2)
+        # computador = melhor_jogada_agente_poda(jogo, 2)
         # computador = jogada_humano()
-        print(f"Jogada do Computador é {computador}")
         jogo = jogo.jogar(computador)
         Gomoku.tabuleiro_atual = jogo.tabuleiro
 
