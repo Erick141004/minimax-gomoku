@@ -9,16 +9,13 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, prox_jo
     if turno_max:  # turno do MAX
         melhor_valor = float("-inf")  # Menos infinito é o menor valor
         for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
-            print(f"Proximo simulacao jogo turno max: {proximo_jogo}")
             utilidade = minimax(
                 jogo.jogar(proximo_jogo),
                 False,
                 jogador,
                 profundidade_maxima - 1,
                 prox_jogo,
-            )
-            print(
-                f"MAX vai escolher entre a utilidade {utilidade} e o {melhor_valor} - Utilidade corresponde a casa: {proximo_jogo}"
+                # proximo_jogo
             )
             melhor_valor = max(
                 utilidade, melhor_valor
@@ -28,16 +25,13 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, prox_jo
     else:  # turno no MIN
         pior_valor = float("inf")  # Mais infinito é o maior valor
         for proximo_jogo in jogo.atualiza_pontos_observaveis_simulacao(prox_jogo):
-            print(f"Proximo simulacao jogo turno min: {proximo_jogo}")
             utilidade = minimax(
                 jogo.jogar(proximo_jogo),
                 True,
                 jogador,
                 profundidade_maxima - 1,
                 prox_jogo,
-            )
-            print(
-                f"MIN vai escolher entre a utilidade {utilidade} e o {pior_valor} - Utilidade corresponde a casa: {proximo_jogo}"
+                # proximo_jogo
             )
             pior_valor = min(utilidade, pior_valor)  # proximo_jogo com o menor valor
         return pior_valor

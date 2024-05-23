@@ -101,8 +101,6 @@ class Gomoku:
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
         pontos_jogaveis_dentro_observaveis = list(pontos_jogaveis)
-        print(f"Ponto jogado: {ponto_jogado}")
-        print(f"Pontos observaveis simulacao: {pontos_jogaveis_dentro_observaveis}")
 
         return pontos_jogaveis_dentro_observaveis
 
@@ -457,11 +455,11 @@ class Gomoku:
         if self.venceu() and self._turno == jogador:
             print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
             print(self)
-            return -100
+            return float("-inf")
         elif self.venceu() and self._turno != jogador:
             print(f"O AGENTE VAI PERDER NESSE MOMENTO {jogador}")
             print(self)
-            return 100
+            return float("inf")
         else:
             return self.calcula_diferenca_peso(proximo_jogo)
 
@@ -471,12 +469,7 @@ class Gomoku:
             proximo_jogo, Gomoku.turno_atual.oposto()
         )
 
-        print(f"Melhor jogada do agente: {linha_melhor_agente}")
-        print(f"Melhor jogada do humano: {linha_melhor_humano}")
-
         if linha_melhor_agente[0] <= linha_melhor_humano[0]:
-            print("Pontuacao para a jogada do HUMANO")
-            # return linha_melhor_humano[0] * 10 + 1
             return (linha_melhor_humano[0] * 10) + 1
         else:
             return linha_melhor_agente[0] * 10
