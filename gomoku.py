@@ -359,45 +359,60 @@ class Gomoku:
         return False
 
     def estrela_linhas_pontos(self, origem, linha: list, jogador):
-        bloqueado = 2  # 0 = seq morta | 1 = talvez valida | 2 = valida (origem faz parte da seq)  # noqa: E501
+        tipo_seq = -1  # 0 = seq morta | 1 = talvez valida | 2 = valida (origem faz parte da seq)  # noqa: E501
         pontos = 0
+
+        if jogador == Gomoku.turno_atual:
+            tipo_seq = 2
+        elif jogador == Gomoku.turno_atual.oposto():
+            tipo_seq = 0
 
         for casa in linha:
             if casa in range(len(self.tabuleiro)):
-                if self.tabuleiro[casa] == jogador.oposto():
-                    bloqueado = 0
-                    pontos = 0
-                elif self.tabuleiro[casa] == Quadrado.V:
-                    pontos += 0
-                else:
-                    if bloqueado == 0:
-                        bloqueado = 1
-                        pontos = 1
-                    elif bloqueado == 1:
-                        pontos += 1
-                        distancia_origem_casa = abs(linha.index(casa) - linha.index(origem))  # noqa: E501
-                        if (distancia_origem_casa < 2):  # significa que sao vizinhas ou eh a casa atual  # noqa: E501
-                            bloqueado = 2
-                    elif bloqueado == 2:
-                        pontos += 1
+                if jogador == Gomoku.turno_atual:
+                    if self.tabuleiro[casa] == jogador.oposto():  # HUMANO
+                        tipo_seq = 0
+                        pontos = 0
+                    elif self.tabuleiro[casa] == Quadrado.V:
+                        pontos += 0
+                    else:
+                        if tipo_seq == 0:
+                            tipo_seq = 1
+                            pontos = 1
+                        elif tipo_seq == 1:
+                            pontos += 1
+                            distancia_origem_casa = abs(linha.index(casa) - linha.index(origem))  # noqa: E501
+                            if (distancia_origem_casa < 2):  # significa que sao vizinhas ou eh a casa atual  # noqa: E501
+                                tipo_seq = 2
+                        elif tipo_seq == 2:
+                            pontos += 1
+                elif jogador == Gomoku.turno_atual.oposto():
+                    if self.tabuleiro[casa] == jogador.oposto():  # AGENTE
+                        if linha[linha.index(origem)] == linha[linha.index(casa)]:  # noqa: E501
+                            tipo_seq = 2
+                            pontos += 0
+                        elif tipo_seq == 2:
+                            break
+                        else:
+                            tipo_seq = 0
+                            pontos = 0
+                    elif self.tabuleiro[casa] == Quadrado.V and tipo_seq == 0:
+                        pontos += 0
+                    elif self.tabuleiro[casa] == Quadrado.V and not tipo_seq == 0:
+                        pontos -= 1
+                    else:
+                        if tipo_seq == 0:
+                            tipo_seq = 1
+                            pontos = 1
+                        elif tipo_seq == 1:
+                            pontos += 1
+                        elif tipo_seq == 2:
+                            pontos += 1
 
-        if bloqueado == 2:
+        if tipo_seq == 2:
             return pontos
         else:
             return 0
-
-        # for casa in linha:
-        #     if casa in range(len(self.tabuleiro)):
-        #         if self.tabuleiro[casa] == jogador.oposto():
-        #             if jogador == Gomoku.turno_atual.oposto():
-        #                 # return pontos
-        #                 pontos += 0
-        #             else:
-        #                 return 0
-        #         elif self.tabuleiro[casa] == Quadrado.V:
-        #             pontos += 0
-        #         else:
-        #             pontos += 1
 
     def calcula_estrela(self, proximo_jogo, jogador):
 
@@ -459,13 +474,6 @@ class Gomoku:
         diagonal_sl_valor = self.estrela_linhas_pontos(origem, diagonal_sl, jogador)
         diagonal_nl_valor = self.estrela_linhas_pontos(origem, diagonal_nl, jogador)
 
-        if origem == 32:
-            if jogador == Quadrado.B:
-                print(f"Jogador: {jogador} | Linha: {(vertical_valor, vertical)}")
-                print(f"Jogador: {jogador} | Linha: {(horizontal_valor, horizontal)}")
-                print(f"Jogador: {jogador} | Linha: {(diagonal_sl_valor, diagonal_sl)}")
-                print(f"Jogador: {jogador} | Linha: {(diagonal_nl_valor, diagonal_nl)}")
-
         tuplas = [
             (vertical_valor, vertical),
             (horizontal_valor, horizontal),
@@ -486,11 +494,18 @@ class Gomoku:
 
     def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
-            print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
+            print(f"O HUMANO VAI GANHAR NESSE MOMENTO {jogador}")
+
+            print(self.calcula_estrela(proximo_jogo, jogador))
+
             print(self)
             return float("-inf")
         elif self.venceu() and self._turno != jogador:
-            print(f"O AGENTE VAI PERDER NESSE MOMENTO {jogador}")
+            print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
+
+
+            print(self.calcula_estrela(proximo_jogo, jogador))
+
             print(self)
             return float("inf")
         else:
