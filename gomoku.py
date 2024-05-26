@@ -364,11 +364,6 @@ class Gomoku:
         )  # 0 = seq morta | 1 = talvez valida | 2 = valida (origem faz parte da seq)  # noqa: E501
         pontos = 0
 
-        print(self)
-
-        if origem == 114:
-            abc = 1
-
         if jogador == Gomoku.turno_atual:
             tipo_seq = 2
         elif jogador == Gomoku.turno_atual.oposto():
@@ -404,7 +399,7 @@ class Gomoku:
                                 tipo_seq = 2
                         elif tipo_seq == 2:
                             pontos += 1
-               elif jogador == Gomoku.turno_atual.oposto():
+                elif jogador == Gomoku.turno_atual.oposto():
                     if self.tabuleiro[casa] == jogador.oposto():  # AGENTE
                         if (linha[linha.index(origem)] == linha[linha.index(casa)]):  # noqa: E501
                             tipo_seq = 2
@@ -512,19 +507,18 @@ class Gomoku:
 
     def calcular_utilidade(self, jogador, proximo_jogo):
         if self.venceu() and self._turno == jogador:
-            print(f"O HUMANO VAI GANHAR NESSE MOMENTO {jogador}")
+            # print(f"O HUMANO VAI GANHAR NESSE MOMENTO {jogador}")
 
-            print(self.calcula_estrela(proximo_jogo, jogador))
+            # print(self.calcula_estrela(proximo_jogo, jogador))
 
-            print(self)
+            # print(self)
             return float("-inf")
         elif self.venceu() and self._turno != jogador:
-            print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
+            # print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
 
+            # print(self.calcula_estrela(proximo_jogo, jogador))
 
-            print(self.calcula_estrela(proximo_jogo, jogador))
-
-            print(self)
+            # print(self)
             return float("inf")
         else:
             return self.calcula_diferenca_peso(proximo_jogo)

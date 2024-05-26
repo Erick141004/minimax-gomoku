@@ -23,6 +23,14 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, proximo
                 proximo_jogo,
                 copy(pontos_observaveis_simulacao)
             )
+
+            a = melhor_valor
+            b = max(utilidade, melhor_valor)
+
+            if proximo_movimento == 5 and a != b:
+                print(f"Nova utilidade: {utilidade}")
+                print(f"Atual melhor valor: {melhor_valor}")
+
             melhor_valor = max(
                 utilidade, melhor_valor
             )  # proximo_jogo com o maior valor
@@ -114,6 +122,9 @@ def melhor_jogada_agente(jogo: Gomoku, profundidade_maxima: int):
             proximo_jogo,  # proximo_jogo_simulacao
             set()
         )
+
+        print(f"AAAAAAAAA {melhor_valor}")
+
         if utilidade > melhor_valor:
             melhor_valor = utilidade
             melhor_jogada = proximo_jogo
