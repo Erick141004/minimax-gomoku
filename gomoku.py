@@ -373,8 +373,9 @@ class Gomoku:
             if casa in range(len(self.tabuleiro)):
                 if jogador == Gomoku.turno_atual:
                     if self.tabuleiro[casa] == jogador.oposto():  # HUMANO
-                        tipo_seq = 0
-                        pontos = 0
+                        if Gomoku.tabuleiro_atual[casa] == jogador.oposto():
+                            tipo_seq = 0
+                            pontos = 0
                     elif self.tabuleiro[casa] == Quadrado.V:
                         pontos += 0
                     else:
@@ -506,6 +507,7 @@ class Gomoku:
             return ponto
 
     def calcular_utilidade(self, jogador, proximo_jogo):
+
         if self.venceu() and self._turno == jogador:
             # print(f"O HUMANO VAI GANHAR NESSE MOMENTO {jogador}")
 

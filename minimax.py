@@ -24,6 +24,10 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, proximo
                 copy(pontos_observaveis_simulacao)
             )
 
+            if proximo_movimento == 48:
+                print(jogo)
+                print(f"RETORNOU PRO MAX - Utilidade: {utilidade} - Melhor Valor: {melhor_valor}")
+
             a = melhor_valor
             b = max(utilidade, melhor_valor)
 
@@ -34,6 +38,8 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, proximo
             melhor_valor = max(
                 utilidade, melhor_valor
             )  # proximo_jogo com o maior valor
+
+            print(f"MAX ESCOLHEU = {melhor_valor}")
 
         return melhor_valor
     else:  # turno no MIN
@@ -48,7 +54,15 @@ def minimax(jogo: Gomoku, turno_max: bool, jogador, profundidade_maxima, proximo
                 proximo_jogo,
                 copy(pontos_observaveis_simulacao)
             )
+
+            if proximo_movimento == 48:
+                print(jogo)
+                print(f"RETORNOU PRO MIN - Utilidade: {utilidade} - Melhor Valor: {pior_valor}")
+
             pior_valor = min(utilidade, pior_valor)  # proximo_jogo com o menor valor  # noqa: E501
+
+            print(f"MIN ESCOLHEU = {pior_valor}")
+
         return pior_valor
 
 
@@ -123,7 +137,7 @@ def melhor_jogada_agente(jogo: Gomoku, profundidade_maxima: int):
             set()
         )
 
-        print(f"AAAAAAAAA {melhor_valor}")
+        print(f"ESCOLHA ENTRE: UTILIDADE = {utilidade} - MELHOR VALOR = {melhor_valor} - NA CASA = {proximo_jogo}")
 
         if utilidade > melhor_valor:
             melhor_valor = utilidade
