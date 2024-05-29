@@ -376,6 +376,8 @@ class Gomoku:
                         if Gomoku.tabuleiro_atual[casa] == jogador.oposto():
                             tipo_seq = 0
                             pontos = 0
+                        else:
+                            pontos -= 1
                     elif self.tabuleiro[casa] == Quadrado.V:
                         pontos += 0
                     else:
