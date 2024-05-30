@@ -1,7 +1,6 @@
+import numpy as np
 from enum import Enum
 from jogador import Jogador
-import numpy as np
-from ambiente import Ambiente
 
 class Quadrado(Jogador, Enum):
     # B = "B"  # branco
@@ -23,18 +22,22 @@ class Quadrado(Jogador, Enum):
         return self.value
 
 
-class Gomoku(Ambiente):
+class Gomoku:
 
     pontos_observaveis = set()
     tabuleiro_atual = []
     turno_atual = Quadrado.V
+
+    q_table = dict()
+    alpha = 0.3
+    gamma = 0.7
+    epsilon = 0.3
 
     def __init__(
         self, tabuleiro: list[Quadrado] = [Quadrado.V] * 225, turno=Quadrado.B
     ):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
         self._turno = turno
-
 
     def turno(self):
         return self._turno
@@ -197,6 +200,7 @@ class Gomoku(Ambiente):
                     cores_linha = 0
 
                 if cores_linha == 5:
+                    print(f"Linha {i}")
                     return True
 
         return False
@@ -220,6 +224,7 @@ class Gomoku(Ambiente):
                     cores_coluna = 0
 
                 if cores_coluna == 5:
+                    print(f"Coluna {i}")
                     return True
 
         return False
@@ -252,6 +257,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Cima baixo {i}")
                         return True
 
                     desloca += 1
@@ -269,6 +275,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Cima baixo desloca direita {i}")
                         return True
 
                     desloca_direita += 1
@@ -288,6 +295,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Cima baixo desloca baixo {i}")
                         return True
 
                     desloca_baixo += 1
@@ -317,6 +325,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Baixo cima {i}")
                         return True
 
                     desloca += 1
@@ -334,6 +343,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Baixo cima desloca direita {i}")
                         return True
 
                     desloca_direita += 1
@@ -353,6 +363,7 @@ class Gomoku(Ambiente):
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
+                        print(f"Baixo cima desloca cima {i}")
                         return True
 
                     desloca_cima += 1
@@ -405,7 +416,9 @@ class Gomoku(Ambiente):
                             pontos += 1
                 elif jogador == Gomoku.turno_atual.oposto():
                     if self.tabuleiro[casa] == jogador.oposto():  # AGENTE
-                        if (linha[linha.index(origem)] == linha[linha.index(casa)]):  # noqa: E501
+                        if (
+                            linha[linha.index(origem)] == linha[linha.index(casa)]
+                        ):  # noqa: E501
                             tipo_seq = 2
                             pontos += 0
                         elif tipo_seq == 2:
