@@ -1,7 +1,7 @@
 from enum import Enum
 from jogador import Jogador
 import numpy as np
-
+from ambiente import Ambiente
 
 class Quadrado(Jogador, Enum):
     # B = "B"  # branco
@@ -23,7 +23,7 @@ class Quadrado(Jogador, Enum):
         return self.value
 
 
-class Gomoku:
+class Gomoku(Ambiente):
 
     pontos_observaveis = set()
     tabuleiro_atual = []
@@ -34,6 +34,7 @@ class Gomoku:
     ):
         self.tabuleiro = tabuleiro  # estado do tabuleiro
         self._turno = turno
+
 
     def turno(self):
         return self._turno
@@ -550,9 +551,11 @@ class Gomoku:
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                # tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                tabuleiro_atual += f"""{self.tabuleiro[i]} """
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                # tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                tabuleiro_atual += f"""\n{self.tabuleiro[i]} """
 
         return tabuleiro_atual
