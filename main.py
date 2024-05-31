@@ -53,6 +53,7 @@ if __name__ == "__main__":
             jogo = aprender(jogo)
             # computador = melhor_jogada_agente_poda(jogo, 2)
             #jogo = jogo.jogar(computador)
+
             Gomoku.tabuleiro_atual = jogo.tabuleiro
 
             #jogo.atualiza_pontos_observaveis(computador)
