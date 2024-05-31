@@ -573,6 +573,11 @@ class Gomoku:
             elif casa == Quadrado.P:
                 estado += "P"
 
+        if Gomoku.turno_atual == Quadrado.B:
+            estado += "1"
+        else:
+            estado += "2"
+
         return estado
 
     def __str__(self):

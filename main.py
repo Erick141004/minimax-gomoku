@@ -10,6 +10,8 @@ if __name__ == "__main__":
     jogo = Gomoku()
     exibir_jogadas = "Jogadas = "
     primeira_jogada = True
+    total_de_jogos = 0
+    quem_venceu = ""
 
     Gomoku.q_table = carregar_q_table()
 
@@ -26,13 +28,13 @@ if __name__ == "__main__":
             humano = 112
             jogo = jogo.jogar(humano)
             primeira_jogada = False
+            jogo.atualiza_pontos_observaveis(humano)
         else:
-            humano = melhor_jogada_agente(jogo, 2)
-            jogo = jogo.jogar(humano)
+            # humano = melhor_jogada_agente(jogo, 2)
+            # jogo = jogo.jogar(humano)
+            jogo = aprender(jogo)
 
         Gomoku.tabuleiro_atual = jogo.tabuleiro
-
-        jogo.atualiza_pontos_observaveis(humano)
 
         # exibir_jogadas += f"⬜:{humano}, "
 
@@ -40,6 +42,7 @@ if __name__ == "__main__":
             print(jogo)
             print("Humano Venceu!")
             break
+
         elif jogo.empate():
             print(jogo)
             print("Empate!")
@@ -47,13 +50,13 @@ if __name__ == "__main__":
 
         # sleep(0.1)
 
-        computador = melhor_jogada_agente(jogo, 2)
-        aprender(jogo)
+        #computador = melhor_jogada_agente(jogo, 2)
+        jogo = aprender(jogo)
         # computador = melhor_jogada_agente_poda(jogo, 2)
-        jogo = jogo.jogar(computador)
+        #jogo = jogo.jogar(computador)
         Gomoku.tabuleiro_atual = jogo.tabuleiro
 
-        jogo.atualiza_pontos_observaveis(computador)
+        #jogo.atualiza_pontos_observaveis(computador)
         # print(f"Pontos observaveis: {jogo.pontos_observaveis}")
         # exibir_jogadas += f"⬛:{computador}, "
         # print(exibir_jogadas)
