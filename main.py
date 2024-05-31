@@ -5,7 +5,6 @@ from time import sleep
 from q_learning import aprender, carregar_q_table, salvar_q_table
 
 
-
 if __name__ == "__main__":
 
     jogo = Gomoku()
@@ -36,6 +35,7 @@ if __name__ == "__main__":
         if jogo.venceu():
             print(jogo)
             print("Humano Venceu!")
+            jogo.blabla(jogo.tabuleiro)
             break
         elif jogo.empate():
             print(jogo)

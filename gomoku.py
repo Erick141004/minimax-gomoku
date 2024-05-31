@@ -2,6 +2,7 @@ import numpy as np
 from enum import Enum
 from jogador import Jogador
 
+
 class Quadrado(Jogador, Enum):
     # B = "B"  # branco
     B = "⬜"
@@ -235,11 +236,97 @@ class Gomoku:
 
         return venceu_cima_baixo or venceu_baixo_cima
 
+    def blabla(self, tabuleiro):
+        cores_diagonal = 0
+        cor_atual = None
+        tam_linha = int(np.sqrt(len(self.tabuleiro)))
+
+        lista = []
+        for i in range(tam_linha):
+
+            if i == 10:
+                a = 1
+
+            if tam_linha - i < 5:
+                break
+
+            if i == 0:
+                desloca = 0
+                for j in range(tam_linha):
+                    ponto_atual = tabuleiro[i + (j * tam_linha + desloca)]
+                    if ponto_atual != Quadrado.V:
+                        if cor_atual != ponto_atual:
+                            cor_atual = ponto_atual
+                            cores_diagonal = 1
+                            lista.append("A")
+                        elif cor_atual == ponto_atual:
+                            cores_diagonal += 1
+                            lista.append("B")
+                    else:
+                        cores_diagonal = 0
+                        lista.clear()
+
+                    if cores_diagonal == 5:
+                        lista.append("X")
+                        print(lista)
+                        return True
+
+                    desloca += 1
+            else:
+                desloca_direita = 0
+                for j in range(tam_linha - i):
+                    ponto_atual = tabuleiro[i + (j * tam_linha + desloca_direita)]
+                    if ponto_atual != Quadrado.V:
+                        if cor_atual != ponto_atual:
+                            cor_atual = ponto_atual
+                            cores_diagonal = 1
+                            lista.append("C")
+                        elif cor_atual == ponto_atual:
+                            cores_diagonal += 1
+                            lista.append("D")
+                    else:
+                        cores_diagonal = 0
+                        lista.clear()
+
+                    if cores_diagonal == 5:
+                        lista.append("Y")
+                        print(lista)
+                        return True
+
+                    desloca_direita += 1
+
+                desloca_baixo = 0
+                for j in range(tam_linha - i):
+                    ponto_atual = tabuleiro[
+                        i * tam_linha + (j * tam_linha + desloca_baixo)
+                    ]
+                    if ponto_atual != Quadrado.V:
+                        if cor_atual != ponto_atual:
+                            cor_atual = ponto_atual
+                            cores_diagonal = 1
+                            lista.append("E")
+                        elif cor_atual == ponto_atual:
+                            cores_diagonal += 1
+                            lista.append("F")
+                    else:
+                        cores_diagonal = 0
+                        lista.clear()
+
+                    if cores_diagonal == 5:
+                        lista.append("Z")
+                        print(lista)
+                        return True
+
+                    desloca_baixo += 1
+
+        return False
+
     def verifica_venceu_diagonal_cima_baixo(self, tabuleiro):
         cores_diagonal = 0
         cor_atual = None
         tam_linha = int(np.sqrt(len(self.tabuleiro)))
         for i in range(tam_linha):
+
             if tam_linha - i < 5:
                 break
 
@@ -565,10 +652,10 @@ class Gomoku:
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
                 # tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]} """
+                tabuleiro_atual += f"""{self.tabuleiro[i]}"""
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
                 # tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""\n{self.tabuleiro[i]} """
+                tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
 
         return tabuleiro_atual
