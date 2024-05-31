@@ -49,27 +49,27 @@ def aprender(jogo: Gomoku):
     print("Escolhendo acao...")
     acao = escolher_acao(estado, possiveis_acoes)
     print(f"Acao escolhida: {acao}")
-    if acao:
+    # if acao:
 
-        novo_estado = jogo.jogar(acao)
-        novo_estado.atualiza_pontos_observaveis(acao, qlearning=False)
+    novo_estado = jogo.jogar(acao)
+    novo_estado.atualiza_pontos_observaveis(acao, qlearning=False)
 
-        if novo_estado:
-            recompensa = novo_estado.calcular_utilidade(jogo.turno_atual, acao)
-            print(f"Recompensa: {recompensa}")
-            atualizar_q_valor(
-                estado,
-                acao,
-                recompensa,
-               novo_estado.estado_chave_qlearning(),
-                list(novo_estado.pontos_observaveis),
-            )  # Passa possiveis acoes para atualizar
-            # return True
-            return novo_estado
-        else:
-            print("Movimento falhou.")
+    if novo_estado:
+        recompensa = novo_estado.calcular_utilidade(jogo.turno_atual, acao)
+        print(f"Recompensa: {recompensa}")
+        atualizar_q_valor(
+            estado,
+            acao,
+            recompensa,
+           novo_estado.estado_chave_qlearning(),
+            list(novo_estado.pontos_observaveis),
+        )  # Passa possiveis acoes para atualizar
+        # return True
+        return novo_estado
     else:
-        print("Nenhuma acao valida encontrada.")
+        print("Movimento falhou.")
+    # else:
+    #     print("Nenhuma acao valida encontrada.")
     return False
 
 

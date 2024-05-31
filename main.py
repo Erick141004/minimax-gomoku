@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     a = 1
 
-    while total_de_jogos < 1000:
+    while total_de_jogos < 100:
         while True:
             Gomoku.turno_atual = Quadrado.B
             humano = 0
