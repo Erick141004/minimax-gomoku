@@ -11,15 +11,19 @@ if __name__ == "__main__":
     exibir_jogadas = "Jogadas = "
     primeira_jogada = True
 
-    # Gomoku.q_table = carregar_q_table()
+    Gomoku.q_table = carregar_q_table()
+
+    for x, y in Gomoku.q_table.items():
+        print(f"Par: {x} | Valor: {y}")
+
+    a = 1
 
     while True:
-        # humano = jogada_humano()
         Gomoku.turno_atual = Quadrado.B
         humano = 0
 
         if primeira_jogada:
-            humano = 2
+            humano = 112
             jogo = jogo.jogar(humano)
             primeira_jogada = False
         else:
@@ -35,7 +39,6 @@ if __name__ == "__main__":
         if jogo.venceu():
             print(jogo)
             print("Humano Venceu!")
-            jogo.blabla(jogo.tabuleiro)
             break
         elif jogo.empate():
             print(jogo)
@@ -45,9 +48,8 @@ if __name__ == "__main__":
         # sleep(0.1)
 
         computador = melhor_jogada_agente(jogo, 2)
-        # computador2, utilidade2 = aprender(jogo)
+        aprender(jogo)
         # computador = melhor_jogada_agente_poda(jogo, 2)
-        # computador = jogada_humano()
         jogo = jogo.jogar(computador)
         Gomoku.tabuleiro_atual = jogo.tabuleiro
 

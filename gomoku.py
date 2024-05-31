@@ -29,7 +29,7 @@ class Gomoku:
     tabuleiro_atual = []
     turno_atual = Quadrado.V
 
-    q_table = dict()
+    q_table = {}
     alpha = 0.3
     gamma = 0.7
     epsilon = 0.3
@@ -92,14 +92,17 @@ class Gomoku:
 
         return pontos_nao_jogados
 
-    def atualiza_pontos_observaveis(self, ponto_jogado):
+    def atualiza_pontos_observaveis(self, ponto_jogado, qlearning=False):
         pontos_possiveis = self.retorna_pontos_possiveis(ponto_jogado)
         pontos_jogaveis = self.verifica_ponto_jogavel(pontos_possiveis)
 
-        Gomoku.pontos_observaveis.update(pontos_jogaveis)
+        if not qlearning:
+            Gomoku.pontos_observaveis.update(pontos_jogaveis)
 
-        if ponto_jogado in Gomoku.pontos_observaveis:
-            Gomoku.pontos_observaveis.remove(ponto_jogado)
+            if ponto_jogado in Gomoku.pontos_observaveis:
+                Gomoku.pontos_observaveis.remove(ponto_jogado)
+        else:
+            return pontos_jogaveis
 
     def atualiza_pontos_observaveis_simulacao(
         self, pontos_observaveis_atual, ponto_jogado
@@ -201,7 +204,6 @@ class Gomoku:
                     cores_linha = 0
 
                 if cores_linha == 5:
-                    print(f"Linha {i}")
                     return True
 
         return False
@@ -225,7 +227,6 @@ class Gomoku:
                     cores_coluna = 0
 
                 if cores_coluna == 5:
-                    print(f"Coluna {i}")
                     return True
 
         return False
@@ -235,91 +236,6 @@ class Gomoku:
         venceu_baixo_cima = self.verifica_venceu_diagonal_baixo_cima(tabuleiro)
 
         return venceu_cima_baixo or venceu_baixo_cima
-
-    def blabla(self, tabuleiro):
-        cores_diagonal = 0
-        cor_atual = None
-        tam_linha = int(np.sqrt(len(self.tabuleiro)))
-
-        lista = []
-        for i in range(tam_linha):
-
-            if i == 10:
-                a = 1
-
-            if tam_linha - i < 5:
-                break
-
-            if i == 0:
-                desloca = 0
-                for j in range(tam_linha):
-                    ponto_atual = tabuleiro[i + (j * tam_linha + desloca)]
-                    if ponto_atual != Quadrado.V:
-                        if cor_atual != ponto_atual:
-                            cor_atual = ponto_atual
-                            cores_diagonal = 1
-                            lista.append("A")
-                        elif cor_atual == ponto_atual:
-                            cores_diagonal += 1
-                            lista.append("B")
-                    else:
-                        cores_diagonal = 0
-                        lista.clear()
-
-                    if cores_diagonal == 5:
-                        lista.append("X")
-                        print(lista)
-                        return True
-
-                    desloca += 1
-            else:
-                desloca_direita = 0
-                for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[i + (j * tam_linha + desloca_direita)]
-                    if ponto_atual != Quadrado.V:
-                        if cor_atual != ponto_atual:
-                            cor_atual = ponto_atual
-                            cores_diagonal = 1
-                            lista.append("C")
-                        elif cor_atual == ponto_atual:
-                            cores_diagonal += 1
-                            lista.append("D")
-                    else:
-                        cores_diagonal = 0
-                        lista.clear()
-
-                    if cores_diagonal == 5:
-                        lista.append("Y")
-                        print(lista)
-                        return True
-
-                    desloca_direita += 1
-
-                desloca_baixo = 0
-                for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[
-                        i * tam_linha + (j * tam_linha + desloca_baixo)
-                    ]
-                    if ponto_atual != Quadrado.V:
-                        if cor_atual != ponto_atual:
-                            cor_atual = ponto_atual
-                            cores_diagonal = 1
-                            lista.append("E")
-                        elif cor_atual == ponto_atual:
-                            cores_diagonal += 1
-                            lista.append("F")
-                    else:
-                        cores_diagonal = 0
-                        lista.clear()
-
-                    if cores_diagonal == 5:
-                        lista.append("Z")
-                        print(lista)
-                        return True
-
-                    desloca_baixo += 1
-
-        return False
 
     def verifica_venceu_diagonal_cima_baixo(self, tabuleiro):
         cores_diagonal = 0
@@ -345,7 +261,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Cima baixo {i}")
                         return True
 
                     desloca += 1
@@ -364,7 +279,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Cima baixo desloca direita {i}")
                         return True
 
                     desloca_direita += 1
@@ -385,7 +299,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Cima baixo desloca baixo {i}")
                         return True
 
                     desloca_baixo += 1
@@ -416,7 +329,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Baixo cima {i}")
                         return True
 
                     desloca += 1
@@ -435,7 +347,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Baixo cima desloca direita {i}")
                         return True
 
                     desloca_direita += 1
@@ -456,7 +367,6 @@ class Gomoku:
                         cores_diagonal = 0
 
                     if cores_diagonal == 5:
-                        print(f"Baixo cima desloca cima {i}")
                         return True
 
                     desloca_cima += 1
@@ -652,15 +562,28 @@ class Gomoku:
         if pos_inimigo is not self.pos_anteriores:
             self.pos_anteriores.update(pos_inimigo)
 
+    def estado_chave_qlearning(self):
+        estado = ""
+
+        for casa in self.tabuleiro:
+            if casa == Quadrado.V:
+                estado += "V"
+            elif casa == Quadrado.B:
+                estado += "B"
+            elif casa == Quadrado.P:
+                estado += "P"
+
+        return estado
+
     def __str__(self):
         tabuleiro_atual = ""
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                # tabuleiro_atual += f"""{self.tabuleiro[i]}"""
+                # tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                tabuleiro_atual += f"""{self.tabuleiro[i]}"""
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                # tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
+                # tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
         return tabuleiro_atual
