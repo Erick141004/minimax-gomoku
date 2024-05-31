@@ -564,19 +564,22 @@ class Gomoku:
 
     def estado_chave_qlearning(self):
         estado = ""
+        branco = preto = ""
+
+        if Gomoku.turno_atual == Quadrado.P:
+            branco = "I"
+            preto = "J"
+        else:
+            branco = "J"
+            preto = "I"
 
         for casa in self.tabuleiro:
             if casa == Quadrado.V:
                 estado += "V"
             elif casa == Quadrado.B:
-                estado += "B"
+                estado += branco
             elif casa == Quadrado.P:
-                estado += "P"
-
-        if Gomoku.turno_atual == Quadrado.B:
-            estado += "1"
-        else:
-            estado += "2"
+                estado += preto
 
         return estado
 
