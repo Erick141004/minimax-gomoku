@@ -583,6 +583,19 @@ class Gomoku:
 
         return estado
 
+    def estado_chave_qlearning_x_minimax(self):
+        estado = ""
+
+        for casa in self.tabuleiro:
+            if casa == Quadrado.V:
+                estado += "V"
+            elif casa == Quadrado.B:
+                estado += "B"
+            elif casa == Quadrado.P:
+                estado += "P"
+
+        return estado
+
     def __str__(self):
         tabuleiro_atual = ""
         for i in range(len(self.tabuleiro)):

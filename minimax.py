@@ -146,7 +146,9 @@ def minimax_alfabeta(
 # Encotrar o melhor movimento do computador
 def melhor_jogada_agente(jogo: Gomoku, profundidade_maxima: int):
 
-    Gomoku.turno_atual = Gomoku.turno_atual.oposto()
+    # Gomoku.turno_atual = Gomoku.turno_atual.oposto()
+
+    # print(Gomoku.turno_atual)
 
     melhor_valor = float("-inf")
     melhor_jogada = -1

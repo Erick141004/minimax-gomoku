@@ -34,14 +34,14 @@ def atualizar_q_valor(estado, acao, recompensa, novo_estado, possiveis_acoes):
     )
     # Equacao de Bellman
     Gomoku.q_table[(estado, acao)] = q_atual + Gomoku.alpha * (
-        recompensa + Gomoku.gamma * max_q_novo_estado - q_atual
+            recompensa + Gomoku.gamma * max_q_novo_estado - q_atual
     )
 
 
 def aprender(jogo: Gomoku):
     """Processo de aprendizado para um episodio."""
 
-    Gomoku.turno_atual = Gomoku.turno_atual.oposto() #TODO
+    Gomoku.turno_atual = Gomoku.turno_atual.oposto()  # TODO
 
     estado = jogo.estado_chave_qlearning()
     possiveis_acoes = list(jogo.pontos_observaveis)
@@ -54,14 +54,14 @@ def aprender(jogo: Gomoku):
     novo_estado = jogo.jogar(acao)
     novo_estado.atualiza_pontos_observaveis(acao, qlearning=False)
 
-    if novo_estado:
+    if novo_estado != None:
         recompensa = novo_estado.calcular_utilidade(jogo.turno_atual, acao)
         print(f"Recompensa: {recompensa}")
         atualizar_q_valor(
             estado,
             acao,
             recompensa,
-           novo_estado.estado_chave_qlearning(),
+            novo_estado.estado_chave_qlearning(),
             list(novo_estado.pontos_observaveis),
         )  # Passa possiveis acoes para atualizar
         # return True

@@ -6,11 +6,13 @@ from q_learning import aprender, carregar_q_table, salvar_q_table
 
 if __name__ == "__main__":
 
+    partidas_ganhas_minimax = 0
+    partidas_ganhas_q_learning = 0
     jogo = Gomoku()
     # exibir_jogadas = "Jogadas = "
     primeira_jogada = True
     id_do_jogo = 1
-    total_de_jogos_limite = 100  # QTD DE JOGOS PARA TREINAMENTO
+    total_de_jogos_limite = 10  # QTD DE JOGOS PARA TREINAMENTO
 
     Gomoku.q_table = carregar_q_table()
 
@@ -30,9 +32,10 @@ if __name__ == "__main__":
                 primeira_jogada = False
                 jogo.atualiza_pontos_observaveis(humano)
             else:
-                # humano = melhor_jogada_agente(jogo, 2)
-                # jogo = jogo.jogar(humano)
-                jogo = aprender(jogo)
+                humano = melhor_jogada_agente(jogo, 2)
+                jogo = jogo.jogar(humano)
+                jogo.atualiza_pontos_observaveis(humano)
+                #jogo = aprender(jogo)
 
             Gomoku.tabuleiro_atual = jogo.tabuleiro
 
@@ -41,6 +44,7 @@ if __name__ == "__main__":
             if jogo.venceu():
                 print(jogo)
                 print("Humano Venceu!")
+                partidas_ganhas_minimax += 1
                 break
 
             elif jogo.empate():
@@ -66,6 +70,7 @@ if __name__ == "__main__":
             if jogo.venceu():
                 print(jogo)
                 print("Computador venceu!")
+                partidas_ganhas_q_learning += 1
                 break
 
             elif jogo.empate():
@@ -85,3 +90,5 @@ if __name__ == "__main__":
         primeira_jogada = True
 
         id_do_jogo += 1
+
+    print(f"MINIMAX GANHOU {partidas_ganhas_minimax} PARTIDAS\nQ_LEARNING GANHOU {partidas_ganhas_q_learning} PARTIDAS")
