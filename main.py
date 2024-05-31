@@ -9,16 +9,17 @@ if __name__ == "__main__":
     jogo = Gomoku()
     # exibir_jogadas = "Jogadas = "
     primeira_jogada = True
-    total_de_jogos = 0
+    id_do_jogo = 1
+    total_de_jogos_limite = 100  # QTD DE JOGOS PARA TREINAMENTO
 
     Gomoku.q_table = carregar_q_table()
 
-    for x, y in Gomoku.q_table.items():
-        print(f"Par: {x} | Valor: {y}")
+    # for x, y in Gomoku.q_table.items():
+    #     print(f"Par: {x} | Valor: {y}")
 
     a = 1
 
-    while total_de_jogos < 100:
+    while id_do_jogo <= total_de_jogos_limite:
         while True:
             Gomoku.turno_atual = Quadrado.B
             humano = 0
@@ -73,6 +74,7 @@ if __name__ == "__main__":
                 break
 
         # sleep(1)
+        print(f"JOGO: {id_do_jogo} de {total_de_jogos_limite}.")
         salvar_q_table()
 
         Gomoku.pontos_observaveis = set()
@@ -82,4 +84,4 @@ if __name__ == "__main__":
         jogo = Gomoku()
         primeira_jogada = True
 
-        total_de_jogos += 1
+        id_do_jogo += 1
