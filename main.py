@@ -42,7 +42,7 @@ if __name__ == "__main__":
             print("Empate!")
             break
 
-        sleep(0.1)
+        # sleep(0.1)
 
         computador = melhor_jogada_agente(jogo, 2)
         # computador2, utilidade2 = aprender(jogo)

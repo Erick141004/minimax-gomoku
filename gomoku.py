@@ -331,6 +331,7 @@ class Gomoku:
                 break
 
             if i == 0:
+                cores_diagonal = 0
                 desloca = 0
                 for j in range(tam_linha):
                     ponto_atual = tabuleiro[i + (j * tam_linha + desloca)]
@@ -349,6 +350,7 @@ class Gomoku:
 
                     desloca += 1
             else:
+                cores_diagonal = 0
                 desloca_direita = 0
                 for j in range(tam_linha - i):
                     ponto_atual = tabuleiro[i + (j * tam_linha + desloca_direita)]
@@ -368,6 +370,7 @@ class Gomoku:
                     desloca_direita += 1
 
                 desloca_baixo = 0
+                cores_diagonal = 0
                 for j in range(tam_linha - i):
                     ponto_atual = tabuleiro[
                         i * tam_linha + (j * tam_linha + desloca_baixo)
@@ -399,6 +402,7 @@ class Gomoku:
                 break
 
             if i == 0:
+                cores_diagonal = 0
                 desloca = 0
                 for j in range(tam_linha):
                     ponto_atual = tabuleiro[210 - (j * tam_linha - desloca)]
@@ -417,6 +421,7 @@ class Gomoku:
 
                     desloca += 1
             else:
+                cores_diagonal = 0
                 desloca_direita = 0
                 for j in range(tam_linha - i):
                     ponto_atual = tabuleiro[210 + i - (j * tam_linha - desloca_direita)]
@@ -436,6 +441,7 @@ class Gomoku:
                     desloca_direita += 1
 
                 desloca_cima = 0
+                cores_diagonal = 0
                 for j in range(tam_linha - i):
                     ponto_atual = tabuleiro[
                         (210 - i * tam_linha) - (j * tam_linha - desloca_cima)
@@ -651,11 +657,10 @@ class Gomoku:
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                # tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]}"""
+                tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                # tabuleiro_atual += f"""{self.tabuleiro[i]}"""
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                # tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
-
+                tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
+                # tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
         return tabuleiro_atual
