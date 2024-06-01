@@ -2,7 +2,7 @@ from gomoku import Gomoku, Quadrado
 from minimax import melhor_jogada_agente, melhor_jogada_agente_poda, jogada_humano
 from time import sleep
 
-from q_learning import aprender, carregar_q_table, salvar_q_table
+from q_learning import aprender, carregar_q_table, salvar_q_table, jogar_melhor_recompensa
 
 if __name__ == "__main__":
 
@@ -12,14 +12,14 @@ if __name__ == "__main__":
     # exibir_jogadas = "Jogadas = "
     primeira_jogada = True
     id_do_jogo = 1
-    total_de_jogos_limite = 10  # QTD DE JOGOS PARA TREINAMENTO
+    total_de_jogos_limite = 1000  # QTD DE JOGOS PARA TREINAMENTO
 
     Gomoku.q_table = carregar_q_table()
 
     # for x, y in Gomoku.q_table.items():
     #     print(f"Par: {x} | Valor: {y}")
-
-    a = 1
+    #
+    # a = 1
 
     while id_do_jogo <= total_de_jogos_limite:
         while True:
@@ -32,9 +32,12 @@ if __name__ == "__main__":
                 primeira_jogada = False
                 jogo.atualiza_pontos_observaveis(humano)
             else:
-                humano = melhor_jogada_agente(jogo, 2)
-                jogo = jogo.jogar(humano)
-                jogo.atualiza_pontos_observaveis(humano)
+                print(f"Antes dele jogar PO: {Gomoku.pontos_observaveis}")
+                aprender(jogo)
+                jogo, melhor_acao = jogar_melhor_recompensa(jogo)
+                jogo.atualiza_pontos_observaveis(melhor_acao)
+                print(f"Depois dele jogar PO: {Gomoku.pontos_observaveis}")
+
                 #jogo = aprender(jogo)
 
             Gomoku.tabuleiro_atual = jogo.tabuleiro
@@ -43,7 +46,7 @@ if __name__ == "__main__":
 
             if jogo.venceu():
                 print(jogo)
-                print("Humano Venceu!")
+                print("Q-learning Venceu!")
                 partidas_ganhas_minimax += 1
                 break
 
@@ -53,9 +56,12 @@ if __name__ == "__main__":
                 break
 
             # sleep(0.1)
-
+            humano = melhor_jogada_agente(jogo, 2)
+            jogo = jogo.jogar(humano)
+            jogo.atualiza_pontos_observaveis(humano)
             #computador = melhor_jogada_agente(jogo, 2)
-            jogo = aprender(jogo)
+
+
             # computador = melhor_jogada_agente_poda(jogo, 2)
             #jogo = jogo.jogar(computador)
 
@@ -69,7 +75,7 @@ if __name__ == "__main__":
             print(jogo)
             if jogo.venceu():
                 print(jogo)
-                print("Computador venceu!")
+                print("Minimax venceu!")
                 partidas_ganhas_q_learning += 1
                 break
 
@@ -81,6 +87,10 @@ if __name__ == "__main__":
         # sleep(1)
         print(f"JOGO: {id_do_jogo} de {total_de_jogos_limite}.")
         salvar_q_table()
+
+        # for x, y in Gomoku.q_table.items():
+        #     if x[1] == 80 or x[1] == 95:
+        #         print(f"Par: {x} | Valor: {y}")
 
         Gomoku.pontos_observaveis = set()
         Gomoku.tabuleiro_atual = []

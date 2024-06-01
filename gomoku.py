@@ -30,9 +30,9 @@ class Gomoku:
     turno_atual = Quadrado.V
 
     q_table = {}
-    alpha = 0.3
-    gamma = 0.7
-    epsilon = 0.3
+    alpha = 0.7
+    gamma = 0.3
+    epsilon = 0.8
 
     def __init__(
         self, tabuleiro: list[Quadrado] = [Quadrado.V] * 225, turno=Quadrado.B
@@ -583,28 +583,15 @@ class Gomoku:
 
         return estado
 
-    def estado_chave_qlearning_x_minimax(self):
-        estado = ""
-
-        for casa in self.tabuleiro:
-            if casa == Quadrado.V:
-                estado += "V"
-            elif casa == Quadrado.B:
-                estado += "B"
-            elif casa == Quadrado.P:
-                estado += "P"
-
-        return estado
-
     def __str__(self):
         tabuleiro_atual = ""
         for i in range(len(self.tabuleiro)):
             if i % int(np.sqrt(len(self.tabuleiro))) != 0:
                 # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                # tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""{self.tabuleiro[i]}"""
+                 tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
+               # tabuleiro_atual += f"""{self.tabuleiro[i]}"""
             else:
                 # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                # tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
-                tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
+                 tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
+               # tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
         return tabuleiro_atual

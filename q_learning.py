@@ -7,7 +7,6 @@ def busca_q_atual(estado, acao):
     """Pega o valor Q para um par estado-acao. Se nao existir, retorna 0."""
     return Gomoku.q_table.get((estado, acao), 0)
 
-
 def escolher_acao(estado, possiveis_acoes):
     """Decide entre explorar acoes aleatorias ou a melhor acao conhecida."""
     if random.random() < Gomoku.epsilon:
@@ -52,7 +51,7 @@ def aprender(jogo: Gomoku):
     # if acao:
 
     novo_estado = jogo.jogar(acao)
-    novo_estado.atualiza_pontos_observaveis(acao, qlearning=False)
+    novo_estado.atualiza_pontos_observaveis(acao, qlearning=True)
 
     if novo_estado != None:
         recompensa = novo_estado.calcular_utilidade(jogo.turno_atual, acao)
@@ -65,12 +64,23 @@ def aprender(jogo: Gomoku):
             list(novo_estado.pontos_observaveis),
         )  # Passa possiveis acoes para atualizar
         # return True
-        return novo_estado
+        # return novo_estado
+        return
     else:
         print("Movimento falhou.")
     # else:
     #     print("Nenhuma acao valida encontrada.")
     return False
+
+def jogar_melhor_recompensa(jogo: Gomoku):
+    estado_chave = jogo.estado_chave_qlearning()
+    lista = [(x, y) for x, y in Gomoku.q_table.items() if x[0] == estado_chave]
+    lista.sort(key=lambda x: x[1], reverse=True)
+
+    melhor_acao = lista[0][0][1]
+    print(melhor_acao)
+
+    return jogo.jogar(melhor_acao), melhor_acao
 
 
 # Funções para uso com Pickle
