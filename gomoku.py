@@ -1,15 +1,11 @@
 import numpy as np
 from enum import Enum
-from jogador import Jogador
 
 
-class Quadrado(Jogador, Enum):
-    # B = "B"  # branco
-    B = "⬜"
-    # P = "P"  # preto
-    P = "⬛"
-    # V = " "  # vazio
-    V = "🟫"
+class Quadrado(Enum):
+    B = "⚪"
+    P = "⚫"
+    V = "🏽"
 
     def oposto(self):
         if self == Quadrado.B:
@@ -29,10 +25,14 @@ class Gomoku:
     tabuleiro_atual = []
     turno_atual = Quadrado.V
 
+    historico_jogadas = []
+
+    ia_vs_ia = False
+
     q_table = {}
-    alpha = 0.7
-    gamma = 0.3
-    epsilon = 0.8
+    alpha = 0.2
+    gamma = 0.8
+    epsilon = 0.2
 
     def __init__(
         self, tabuleiro: list[Quadrado] = [Quadrado.V] * 225, turno=Quadrado.B
@@ -51,7 +51,9 @@ class Gomoku:
 
     def jogos_validos(self):
         return [
-            p for p in range(len(self.tabuleiro)) if self.tabuleiro[p] == Quadrado.V
+            p
+            for p in range(len(self.tabuleiro))
+            if self.tabuleiro[p] == Quadrado.V  # noqa: E501
         ]
 
     def regiao_jogada(self, pos):
@@ -268,7 +270,9 @@ class Gomoku:
                 cores_diagonal = 0
                 desloca_direita = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[i + (j * tam_linha + desloca_direita)]
+                    ponto_atual = tabuleiro[
+                        i + (j * tam_linha + desloca_direita)
+                    ]  # noqa: E501
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -336,7 +340,9 @@ class Gomoku:
                 cores_diagonal = 0
                 desloca_direita = 0
                 for j in range(tam_linha - i):
-                    ponto_atual = tabuleiro[210 + i - (j * tam_linha - desloca_direita)]
+                    ponto_atual = tabuleiro[
+                        210 + i - (j * tam_linha - desloca_direita)
+                    ]  # noqa: E501
                     if ponto_atual != Quadrado.V:
                         if cor_atual != ponto_atual:
                             cor_atual = ponto_atual
@@ -420,7 +426,8 @@ class Gomoku:
                 elif jogador == Gomoku.turno_atual.oposto():
                     if self.tabuleiro[casa] == jogador.oposto():  # AGENTE
                         if (
-                            linha[linha.index(origem)] == linha[linha.index(casa)]
+                            linha[linha.index(origem)]
+                            == linha[linha.index(casa)]  # noqa: E501
                         ):  # noqa: E501
                             tipo_seq = 2
                             pontos += 0
@@ -431,7 +438,9 @@ class Gomoku:
                             pontos = 0
                     elif self.tabuleiro[casa] == Quadrado.V and tipo_seq == 0:
                         pontos += 0
-                    elif self.tabuleiro[casa] == Quadrado.V and not tipo_seq == 0:
+                    elif (
+                        self.tabuleiro[casa] == Quadrado.V and not tipo_seq == 0
+                    ):  # noqa: E501
                         pontos -= 1
                     else:
                         if tipo_seq == 0:
@@ -503,9 +512,15 @@ class Gomoku:
         ]
 
         vertical_valor = self.estrela_linhas_pontos(origem, vertical, jogador)
-        horizontal_valor = self.estrela_linhas_pontos(origem, horizontal, jogador)
-        diagonal_sl_valor = self.estrela_linhas_pontos(origem, diagonal_sl, jogador)
-        diagonal_nl_valor = self.estrela_linhas_pontos(origem, diagonal_nl, jogador)
+        horizontal_valor = self.estrela_linhas_pontos(
+            origem, horizontal, jogador
+        )  # noqa: E501
+        diagonal_sl_valor = self.estrela_linhas_pontos(
+            origem, diagonal_sl, jogador
+        )  # noqa: E501
+        diagonal_nl_valor = self.estrela_linhas_pontos(
+            origem, diagonal_nl, jogador
+        )  # noqa: E501
 
         tuplas = [
             (vertical_valor, vertical),
@@ -528,24 +543,16 @@ class Gomoku:
     def calcular_utilidade(self, jogador, proximo_jogo):
 
         if self.venceu() and self._turno == jogador:
-            # print(f"O HUMANO VAI GANHAR NESSE MOMENTO {jogador}")
-
-            # print(self.calcula_estrela(proximo_jogo, jogador))
-
-            # print(self)
             return float("-inf")
         elif self.venceu() and self._turno != jogador:
-            # print(f"O AGENTE VAI GANHAR NESSE MOMENTO {jogador}")
-
-            # print(self.calcula_estrela(proximo_jogo, jogador))
-
-            # print(self)
             return float("inf")
         else:
             return self.calcula_diferenca_peso(proximo_jogo)
 
     def calcula_diferenca_peso(self, proximo_jogo):
-        linha_melhor_agente = self.calcula_estrela(proximo_jogo, Gomoku.turno_atual)
+        linha_melhor_agente = self.calcula_estrela(
+            proximo_jogo, Gomoku.turno_atual
+        )  # noqa: E501
         linha_melhor_humano = self.calcula_estrela(
             proximo_jogo, Gomoku.turno_atual.oposto()
         )
@@ -583,15 +590,63 @@ class Gomoku:
 
         return estado
 
+    def define_ou_inverte_jogador_atual(self):
+        if Gomoku.turno_atual == Quadrado.V:
+            Gomoku.turno_atual = Quadrado.B
+        else:
+            Gomoku.turno_atual = Gomoku.turno_atual.oposto()
+
+    def jogada_humano(self):
+        self.define_ou_inverte_jogador_atual()
+
+        jogada = -1
+        while jogada not in self.jogos_validos():
+            jogada = int(
+                input(f"{Gomoku.turno_atual}Escolha uma casa (0-224):")
+            )  # noqa: E501
+        return jogada
+
+    def printa_historico_jogada(self):
+
+        str_hist = "\nHistorico: "
+
+        for i, item in enumerate(Gomoku.historico_jogadas):
+            if i == len(Gomoku.historico_jogadas) - 1:
+                str_hist += f" {item[0]} -> {item[1]}"
+            elif i == 0:
+                str_hist += f"{item[0]} -> {item[1]} |"
+            else:
+                str_hist += f" {item[0]} -> {item[1]} |"
+
+        str_hist += "\n"
+
+        print(str_hist)
+
+    def adiciona_historico_jogada(self, jogada):
+        Gomoku.historico_jogadas.append((Gomoku.turno_atual, jogada))
+
+    def limpa_historico_jogada(self):
+        Gomoku.historico_jogadas.clear()
+
+    def atualiza_tabuleiro(self):
+        Gomoku.tabuleiro_atual = self.tabuleiro
+
     def __str__(self):
         tabuleiro_atual = ""
         for i in range(len(self.tabuleiro)):
-            if i % int(np.sqrt(len(self.tabuleiro))) != 0:
-                # tabuleiro_atual += f"""| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                 tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""
-               # tabuleiro_atual += f"""{self.tabuleiro[i]}"""
+            if i == 0:
+                if not Gomoku.ia_vs_ia:
+                    tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""  # noqa: E501
+                else:
+                    tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
+            elif i % int(np.sqrt(len(self.tabuleiro))) != 0:
+                if not Gomoku.ia_vs_ia:
+                    tabuleiro_atual += f"""{self.tabuleiro[i]}{str(i).zfill(3)}"""  # noqa: E501
+                else:
+                    tabuleiro_atual += f"""{self.tabuleiro[i]}"""
             else:
-                # tabuleiro_atual += f"""\n| {self.tabuleiro[i]} ({str(i).zfill(3)}) |"""
-                 tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""
-               # tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
+                if not Gomoku.ia_vs_ia:
+                    tabuleiro_atual += f"""\n\n{self.tabuleiro[i]}{str(i).zfill(3)}"""  # noqa: E501
+                else:
+                    tabuleiro_atual += f"""\n{self.tabuleiro[i]}"""
         return tabuleiro_atual
