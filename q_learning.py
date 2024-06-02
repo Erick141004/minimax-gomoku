@@ -2,7 +2,6 @@ import pickle
 import random
 from gomoku import Gomoku
 
-
 def busca_q_atual(estado, acao):
     return Gomoku.q_table.get((estado, acao), 0)
 
@@ -60,6 +59,18 @@ def jogar_melhor_recompensa(jogo: Gomoku):
     lista.sort(key=lambda x: x[1], reverse=True)
 
     melhor_acao = lista[0][0][1]
+
+    return jogo.jogar(melhor_acao), melhor_acao
+
+
+def jogar_aleatorio_recompensa(jogo: Gomoku):
+    estado_chave = jogo.estado_chave_qlearning()
+
+    lista = [(x, y) for x, y in Gomoku.q_table.items() if x[0] == estado_chave]
+
+    choice = random.choice(lista)
+
+    melhor_acao = choice[0][1]
 
     return jogo.jogar(melhor_acao), melhor_acao
 
