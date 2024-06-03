@@ -4,6 +4,7 @@ from q_learning import (
     aprender,
     carregar_q_table,
     estado_na_lista,
+    jogar_aleatorio_recompensa,
     jogar_melhor_recompensa,
     salvar_q_table,
 )
@@ -314,7 +315,7 @@ def treino_qlearning_vs_qlearning(quantidade):
 
     Gomoku.alpha = 0.7
     Gomoku.gamma = 0.3
-    Gomoku.epsilon = 0.8
+    Gomoku.epsilon = 0.9
 
     carregar_q_table()
     jogo = Gomoku()
@@ -340,7 +341,7 @@ def treino_qlearning_vs_qlearning(quantidade):
         else:
             jogo.define_ou_inverte_jogador_atual()
             aprender(jogo)
-            jogo, melhor_acao = jogar_melhor_recompensa(jogo)
+            jogo, melhor_acao = jogar_aleatorio_recompensa(jogo)
             jogo.adiciona_historico_jogada(melhor_acao)
             jogo.printa_historico_jogada()
             jogo.atualiza_pontos_observaveis(melhor_acao)
@@ -362,7 +363,7 @@ def treino_qlearning_vs_qlearning(quantidade):
 
         jogo.define_ou_inverte_jogador_atual()
         aprender(jogo)
-        jogo, melhor_acao = jogar_melhor_recompensa(jogo)
+        jogo, melhor_acao = jogar_aleatorio_recompensa(jogo)
 
         jogo.adiciona_historico_jogada(melhor_acao)
         jogo.printa_historico_jogada()
