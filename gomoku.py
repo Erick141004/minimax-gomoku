@@ -30,8 +30,8 @@ class Gomoku:
     ia_vs_ia = False
 
     q_table = {}
-    alpha = 0.2
-    gamma = 0.8
+    alpha = 0.7
+    gamma = 0.3
     epsilon = 0.2
 
     def __init__(
